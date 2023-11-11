@@ -3,9 +3,9 @@ from ..ImageInterface import ImageInterface
 import io
 
 class Image(ImageInterface):
-    def __init__(self, name: str, base_image):
-        self._name = name
-        self._image = base_image
+    def __init__(self, name: str, baseImage: dict):
+        self._name: str = name
+        self._image: dict = baseImage
 
     @property
     def name(self) -> str:
@@ -16,7 +16,7 @@ class Image(ImageInterface):
         return self._image["ext"]
 
     def getBytes(self) -> io.BytesIO:
-        image_bytes = self._image["image"]
+        image_bytes: bytes = self._image["image"]
 
         return io.BytesIO(image_bytes)
     

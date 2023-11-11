@@ -5,7 +5,7 @@ import io
 
 class ImageInterface(ABC):
     @abstractmethod
-    def __init__(self, name: str, base_image):
+    def __init__(self, name: str, baseImage: dict):
         pass
 
     @property

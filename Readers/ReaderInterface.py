@@ -8,6 +8,10 @@ class ReaderInterface(ABC):
         pass
 
     @abstractmethod
+    def getTitle(self) -> str:
+        pass
+
+    @abstractmethod
     def getNumberOfPages(self) -> int:
         pass
 
