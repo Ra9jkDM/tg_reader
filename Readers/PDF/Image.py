@@ -16,9 +16,9 @@ class Image(ImageInterface):
         return self._image["ext"]
 
     def getBytes(self) -> io.BytesIO:
-        image_bytes: bytes = self._image["image"]
+        imageBytes: bytes = self._image["image"]
 
-        return io.BytesIO(image_bytes)
+        return io.BytesIO(imageBytes)
     
     def __str__(self) -> str:
         return f"Image({self.name}.{self.ext})"

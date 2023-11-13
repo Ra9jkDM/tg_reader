@@ -22,11 +22,12 @@ class TestReaderCreate(unittest.TestCase):
             self.fail("Can not load PDF from memory stream")
 
 class TestReader(unittest.TestCase):
-    def setUp(self):
-        self.reader = PDFReader(BOOK_PATH)
+    @classmethod
+    def setUp(cls):
+        cls.reader = PDFReader(BOOK_PATH)
 
     def test_book_title(self):
-        self.assertEqual(self.reader.getTitle(), "PDF sample",
+        self.assertEqual(self.reader.getTitle(), "Test_sample",
                 "The title of the book is incorrect")
 
     def test_number_of_pages(self):
@@ -56,11 +57,25 @@ class TestReader(unittest.TestCase):
         self.assertEqual(text, "Third page\n", 
                 "Wrong text")
 
-    def test_get_images(self):
+    def test_get_zero_image(self):
+        self.reader.setPage(1)
+        images = self.reader.getImages()
+
+        self.assertEqual(len(images), 0,
+            "Can not detect images")
+    
+    def test_get_one_image(self):
         self.reader.setPage(0)
         images = self.reader.getImages()
 
-        self.assertEqual(len(images), 4, # LibreDraw can not put pdf on specific page
+        self.assertEqual(len(images), 1,
+            "Can not detect images")
+
+    def test_get_much_images(self):
+        self.reader.setPage(2)
+        images = self.reader.getImages()
+
+        self.assertEqual(len(images), 5,
             "Can not detect images")
 
 
