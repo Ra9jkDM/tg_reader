@@ -1,8 +1,10 @@
 from __future__ import annotations
 from typing import Final, List
 
-from sqlalchemy import create_engine, Column, Integer, Float, String, Date, ForeignKey, select, Boolean, JSON
+from sqlalchemy import create_engine, Column, Integer, Float, String, Date, ForeignKey, select, Boolean, JSON, Index
 from sqlalchemy.orm import declarative_base, sessionmaker, Session, relationship, mapped_column, Mapped, relationship, backref
+from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy.sql import text
 
 from os import environ
 
@@ -28,7 +30,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, unique=True, autoincrement=True)
 
     social_id: Mapped[String] = mapped_column(String(15), unique=True, nullable=False)
-    preferences: Mapped[JSON] = mapped_column(JSON, nullable=True)
+    preferences: Mapped[JSON] = mapped_column(MutableDict.as_mutable(JSON), nullable=True)
 
     books: Mapped[List["UserBook"]] = relationship("UserBook", back_populates="user", cascade="all, delete", passive_deletes=True)
     notes: Mapped[List["Note"]] = relationship("Note", back_populates="user", cascade="all, delete", passive_deletes=True)
@@ -83,9 +85,19 @@ class Note(Base):
 
 def create_db(engine=ENGINE):
     Base.metadata.create_all(bind=engine)
+ 
+    # page_index = Index("idx_page", Page.book_id, Page.page_number)
+    with Session(autoflush=True, bind=ENGINE) as db:
+        db.execute(text("CREATE INDEX IF NOT EXISTS idx_page ON page (book_id, page_number);"))
 
 def delete_db(engine=ENGINE):
     Base.metadata.drop_all(bind=engine)
+
+    # page_index.drop(bind=engine)
+    with Session(autoflush=True, bind=ENGINE) as db:
+        db.execute(text("DROP INDEX IF EXISTS idx_page;"))
+        db.commit()
+
 
 if __name__ == "__main__":
     create_db()
