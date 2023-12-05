@@ -1,3 +1,4 @@
+from typing import Final
 from .FileStorageInterface import FileStorageInterface
 
 from minio import Minio
@@ -7,14 +8,14 @@ import io
 from os import environ
 
 class MinIO(FileStorageInterface):
-    _HOST = environ.get("S3_HOST")
-    _PORT = environ.get("S3_PORT")
-    _BUCKET = environ.get("S3_BUCKET")
+    _HOST: Final = environ.get("S3_HOST")
+    _PORT: Final = environ.get("S3_PORT")
+    _BUCKET: Final = environ.get("S3_BUCKET")
 
     # generate in MimIO web console [localhost/access-keys]
-    _ACCESS_KEY = environ.get("S3_ACCESS_KEY")
-    _SECRET_KEY = environ.get("S3_SECRET_KEY")
-    _SECURE = int(environ.get("S3_SECURE")) # type: ignore # Http -> False[0], Https -> True[1] 
+    _ACCESS_KEY: Final = environ.get("S3_ACCESS_KEY")
+    _SECRET_KEY: Final = environ.get("S3_SECRET_KEY")
+    _SECURE: Final = int(environ.get("S3_SECURE")) # type: ignore # Http -> False[0], Https -> True[1] 
 
     def __init__(self):
         self._client = Minio(f"{self._HOST}:{self._PORT}",
