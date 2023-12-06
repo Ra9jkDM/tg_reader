@@ -30,6 +30,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, unique=True, autoincrement=True)
 
     social_id: Mapped[String] = mapped_column(String(15), unique=True, nullable=False)
+    current_book: Mapped[int] = mapped_column(Integer, nullable=True)
     preferences: Mapped[JSON] = mapped_column(MutableDict.as_mutable(JSON), nullable=True)
 
     books: Mapped[List["UserBook"]] = relationship("UserBook", back_populates="user", cascade="all, delete", passive_deletes=True)
@@ -87,14 +88,14 @@ def create_db(engine=ENGINE):
     Base.metadata.create_all(bind=engine)
  
     # page_index = Index("idx_page", Page.book_id, Page.page_number)
-    with Session(autoflush=True, bind=ENGINE) as db:
+    with Session(autoflush=True, bind=engine) as db:
         db.execute(text("CREATE INDEX IF NOT EXISTS idx_page ON page (book_id, page_number);"))
 
 def delete_db(engine=ENGINE):
     Base.metadata.drop_all(bind=engine)
 
     # page_index.drop(bind=engine)
-    with Session(autoflush=True, bind=ENGINE) as db:
+    with Session(autoflush=True, bind=engine) as db:
         db.execute(text("DROP INDEX IF EXISTS idx_page;"))
         db.commit()
 

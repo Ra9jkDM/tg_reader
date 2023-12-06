@@ -1,27 +1,11 @@
 import unittest
 
-from sqlalchemy.orm import Session
+from Database.session import session
 from Database.model import *
 
-from functools import wraps
+from  .Base import Base
 
-def session(func):
-    @wraps(func)
-    def test_create(self, *args, **kwargs):
-        with Session(autoflush=True, bind=self.ENGINE) as db:
-            func(self, db)
-    
-    return test_create
-
-
-    
-
-class TestDatabase(unittest.TestCase):
-    def setUp(self):
-        self.ENGINE = get_engine("_test")
-        # print(f"Database: {self.ENGINE}")
-        create_db(self.ENGINE)
-
+class TestDatabase(Base):
     # Book & Pages
 
     def _create_book(self, db):
@@ -171,10 +155,6 @@ class TestDatabase(unittest.TestCase):
                 "Can not delete notes associated with book")
         self.assertEqual(users_amount, 1, 
                 "Delete user associated with book")
-
-    def tearDown(self):
-        delete_db(self.ENGINE)
-        pass
 
 if __name__ == "__main__":
     unittest.main()
