@@ -7,10 +7,10 @@ import os
 KEY = "TEST"
 
 
-def setTestENV():
+def set_test_env():
     os.environ[KEY] = "True"
 
-def getEngine():
+def _get_engine():
     if os.environ.get(KEY):
         engine = get_engine("_test")
     else:
@@ -21,7 +21,7 @@ def getEngine():
 def session(func):
     @wraps(func)
     def test_create(self, *args, **kwargs):
-        self.ENGINE = getEngine()
+        self.ENGINE = _get_engine()
 
         with Session(autoflush=True, bind=self.ENGINE) as db:
             return func(self, db, *args, **kwargs)

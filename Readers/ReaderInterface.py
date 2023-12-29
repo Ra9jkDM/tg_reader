@@ -4,26 +4,26 @@ from .ImageInterface import ImageInterface
 
 class ReaderInterface(ABC):
     @abstractmethod
-    def __init__(self, file: FileTypes, fileType: FileType):
+    def __init__(self, file: FileTypes, file_type: FileType):
         pass
 
     @abstractmethod
-    def getTitle(self) -> str:
+    def get_title(self) -> str:
         pass
 
     @abstractmethod
-    def getNumberOfPages(self) -> int:
+    def get_number_of_pages(self) -> int:
         pass
 
     @abstractmethod
-    def setPage(self, index: int) -> None:
+    def set_page(self, index: int) -> None:
         pass
 
     @abstractmethod
-    def getText(self) -> str:
+    def get_text(self) -> str:
         pass
 
     @abstractmethod
-    def getImages(self) -> list[ImageInterface]:
+    def get_images(self) -> list[ImageInterface]:
         pass
 

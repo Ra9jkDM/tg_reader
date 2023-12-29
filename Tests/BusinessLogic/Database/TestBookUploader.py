@@ -39,17 +39,17 @@ class TestBookUploader(Base):
         self.uploader.upload_book("pdf", b'somebook8302')
 
     @patch.multiple(ImageInterface, __abstractmethods__ = set(),
-        getBytes = MagicMock(return_value=b'1234'), 
+        get_bytes = MagicMock(return_value=b'1234'), 
         ext=PropertyMock(return_value="png"),
         name=PropertyMock(return_value="test"))
     def test_mock(self):
         mock = ImageInterface("123", "aaa")
 
         self.assertEqual(mock.ext, 'png')
-        self.assertEqual(mock.getBytes(), b'1234')
+        self.assertEqual(mock.get_bytes(), b'1234')
 
     @patch.multiple(ImageInterface, __abstractmethods__ = set(),
-        getBytes = MagicMock(return_value=b'1234'), 
+        get_bytes = MagicMock(return_value=b'1234'), 
         ext=PropertyMock(return_value="png"),
         name=PropertyMock(return_value="test"))
     def test_upload_page_by_page(self):
@@ -63,7 +63,7 @@ class TestBookUploader(Base):
 
     def tearDown(self):
         super().tearDown()
-        self.uploader._storage.deleteBucket()
+        self.uploader._storage.delete_bucket()
 
 
 

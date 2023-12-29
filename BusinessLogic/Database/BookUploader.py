@@ -16,8 +16,8 @@ class BookUploader:
         self._storage: FileStorageInterface = MinIO()
 
     def upload_book(self, ext, file):
-        self._storage.uploadFile(folder=self._book_id,
-                                    fileName=f"{self._book_id}.{ext}", file=file)
+        self._storage.upload_file(folder=self._book_id,
+                                    file_name=f"{self._book_id}.{ext}", file=file)
 
     @session
     def create_book(self, db):
@@ -39,7 +39,7 @@ class BookUploader:
         db.commit()
 
         for i, img in enumerate(images, start=1):
-            self._storage.uploadFile(folder=f"{self._book_id}/{self._page_number}", 
-                                    fileName=f"{i}.{img.ext}", file=img.getBytes())
+            self._storage.upload_file(folder=f"{self._book_id}/{self._page_number}", 
+                                    file_name=f"{i}.{img.ext}", file=img.get_bytes())
         self._page_number+=1
         

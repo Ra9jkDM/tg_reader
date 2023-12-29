@@ -19,7 +19,7 @@ class TestImage(unittest.TestCase):
                 "Wrong image extension")
 
     def test_get_bytes(self):
-        b = self.img.getBytes()
+        b = self.img.get_bytes()
 
         self.assertEqual(*b, b"bytes", 
                 "Wrong byte object")

@@ -28,16 +28,16 @@ class MinIO(FileStorageInterface):
             self._client.make_bucket(self._BUCKET)
 
 
-    def uploadFile(self, folder: str, fileName: str, file: io.BytesIO) -> None:
+    def upload_file(self, folder: str, file_name: str, file: io.BytesIO) -> None:
         response = self._client.put_object(
-            self._BUCKET, f"{folder}/{fileName}", io.BytesIO(file), # type: ignore
+            self._BUCKET, f"{folder}/{file_name}", io.BytesIO(file), # type: ignore
                     length=-1, part_size=5*1024*1024
         )
 
-    def downloadFile(self, folder: str, fileName: str) -> io.BytesIO:
+    def download_file(self, folder: str, file_name: str) -> io.BytesIO:
         data = None
         try:
-            response = self._client.get_object(bucket_name = self._BUCKET, object_name = f"{folder}/{fileName}")
+            response = self._client.get_object(bucket_name = self._BUCKET, object_name = f"{folder}/{file_name}")
             data = response.data
         finally:
             response.close()
@@ -45,17 +45,17 @@ class MinIO(FileStorageInterface):
 
         return data
 
-    def removeFolder(self, folder: str) -> None:
-        deleteObjectList = map(
+    def remove_folder(self, folder: str) -> None:
+        delete_object_list = map(
             lambda x: DeleteObject(x.object_name),
             self._client.list_objects(self._BUCKET, folder, recursive=True),
         )
-        errors = self._client.remove_objects(self._BUCKET, deleteObjectList)
+        errors = self._client.remove_objects(self._BUCKET, delete_object_list)
         for error in errors:
             print("error occurred when deleting object", error)
 
-    def deleteBucket(self):
-        self.removeFolder('')
+    def delete_bucket(self):
+        self.remove_folder('')
         self._client.remove_bucket(self._BUCKET)
 
 

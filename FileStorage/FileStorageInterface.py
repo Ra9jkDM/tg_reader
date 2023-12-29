@@ -8,20 +8,20 @@ class FileStorageInterface(ABC):
         pass
 
     @abstractmethod
-    def uploadFile(self, folder: str, fileName: str, file: io.BytesIO) -> None:
+    def upload_file(self, folder: str, file_name: str, file: io.BytesIO) -> None:
         pass
 
     @abstractmethod
-    def downloadFile(self, folder: str, fileName: str) -> io.BytesIO:
+    def download_file(self, folder: str, file_name: str) -> io.BytesIO:
         pass
 
     @abstractmethod
-    def removeFolder(self, folder: str) -> None:
+    def remove_folder(self, folder: str) -> None:
         pass
 
 # baseFolder
             # /book1
                     # /book.pdf
-                    # /img1.png
-                    # /img2.png
+                    # /page1/img1.png
+                    # /page2/img2.png
             # /book2
