@@ -2,14 +2,13 @@ import unittest
 
 from FileStorage.MinIO import MinIO
 
+from Tests.testEnv import set_test_env
+
 class TestMinIO(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        set_test_env()
         cls.storage = MinIO()
-
-        # Create bucket for tests
-        cls.storage._BUCKET = "test-minio-bucket"
-        cls.storage.__init__()
 
     def test_01_upload_file(self):
         try:
@@ -27,6 +26,27 @@ class TestMinIO(unittest.TestCase):
             self.storage.remove_folder("txt")
         except:
             self.fail("Can not remove folder in bucket")
+
+    def test_list_folder(self):
+        for i in range(1, 5):
+            self.storage.upload_file("3/1", f"{i}.txt", b"1234_test")
+
+        files = self.storage.list_folder("3/1/")
+
+        self.assertEqual(len(files), 4)
+
+    def test_download_files_from_list_folder_output(self):
+        for i in range(1, 5):
+            self.storage.upload_file("3/1", f"{i}.txt", b"1234_test")
+
+        files = self.storage.list_folder("3/1/")
+
+        downloaded_files = []
+        for i in files:
+            tmp = self.storage.download_file("", i)
+            downloaded_files.append(tmp)
+
+        self.assertEqual(len(downloaded_files), 4)
 
     def test_delete_not_empty_bucket(self):
         for i in range(1, 4):

@@ -12,6 +12,10 @@ class FileStorageInterface(ABC):
         pass
 
     @abstractmethod
+    def list_folder(self, folder: str):
+        pass
+
+    @abstractmethod
     def download_file(self, folder: str, file_name: str) -> io.BytesIO:
         pass
 

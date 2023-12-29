@@ -4,6 +4,7 @@ import unittest
 from Tests.BusinessLogic.Database.TestDatabase import *
 from Tests.BusinessLogic.Database.TestBook import *
 from Tests.BusinessLogic.Database.TestBookUploader import *
+from Tests.BusinessLogic.Database.TestPage import *
 
 # Database
 from Tests.Database.TestDatabase import *

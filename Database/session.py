@@ -4,11 +4,7 @@ from Database.model import get_engine
 
 import os
 
-KEY = "TEST"
-
-
-def set_test_env():
-    os.environ[KEY] = "True"
+from Tests.testEnv import KEY
 
 def _get_engine():
     if os.environ.get(KEY):

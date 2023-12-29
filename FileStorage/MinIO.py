@@ -7,6 +7,8 @@ from minio.deleteobjects import DeleteObject
 import io
 from os import environ
 
+from Tests.testEnv import KEY
+
 class MinIO(FileStorageInterface):
     _HOST: Final = environ.get("S3_HOST")
     _PORT: Final = environ.get("S3_PORT")
@@ -18,6 +20,9 @@ class MinIO(FileStorageInterface):
     _SECURE: Final = int(environ.get("S3_SECURE")) # type: ignore # Http -> False[0], Https -> True[1] 
 
     def __init__(self):
+        if environ.get(KEY):
+            self._BUCKET += "-test"
+
         self._client = Minio(f"{self._HOST}:{self._PORT}",
                 access_key = self._ACCESS_KEY,
                 secret_key = self._SECRET_KEY,
@@ -33,6 +38,16 @@ class MinIO(FileStorageInterface):
             self._BUCKET, f"{folder}/{file_name}", io.BytesIO(file), # type: ignore
                     length=-1, part_size=5*1024*1024
         )
+
+    def list_folder(self, folder: str):
+        files = self._client.list_objects(bucket_name = self._BUCKET, prefix=folder)
+        
+        file_list = []
+
+        for i in files:
+            file_list.append(i.object_name)
+        
+        return file_list
 
     def download_file(self, folder: str, file_name: str) -> io.BytesIO:
         data = None

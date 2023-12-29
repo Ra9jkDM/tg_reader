@@ -1,6 +1,8 @@
 import unittest
 
-from Database.session import set_test_env, _get_engine
+from Tests.testEnv import set_test_env
+
+from Database.session import _get_engine
 from Database.model import create_db, delete_db
 
 class Base(unittest.TestCase):

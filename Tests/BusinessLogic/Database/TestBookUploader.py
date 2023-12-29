@@ -10,6 +10,7 @@ from Tests.Database.Base import Base
 from .Data import Data, id_1, id_2, id_3
 from Readers.ImageInterface import ImageInterface
 
+
 book_name = "ZTest book"
 
 class TestBookUploader(Base): 
@@ -24,8 +25,6 @@ class TestBookUploader(Base):
         self.book = user.book
         self.uploader = self.book.create(book_name, 4)
 
-        self.uploader._storage._BUCKET = "test-minio-bucket"
-        self.uploader._storage.__init__()
 
     def test_create_book(self):
         self.uploader.create_book()
