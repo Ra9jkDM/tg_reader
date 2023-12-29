@@ -1,0 +1,73 @@
+import unittest
+from unittest.mock import patch, MagicMock, PropertyMock
+
+from BusinessLogic.Database.main import Database
+from BusinessLogic.Database.Book import Book
+from BusinessLogic.Database.BookUploader import BookUploader
+
+from Tests.Database.Base import Base
+
+from .Data import Data, id_1, id_2, id_3
+from Readers.ImageInterface import ImageInterface
+
+book_name = "ZTest book"
+
+class TestBookUploader(Base): 
+    def setUp(self):
+        super().setUp()   
+
+        self.data = Data()
+        self.data.create()
+
+        db = Database()
+        user = db.get_user(id_2)
+        self.book = user.book
+        self.uploader = self.book.create(book_name, 4)
+
+        self.uploader._storage._BUCKET = "test-minio-bucket"
+        self.uploader._storage.__init__()
+
+    def test_create_book(self):
+        self.uploader.create_book()
+
+        book = self.book.get_all()[-1]
+
+        self.assertEqual(book.name, book_name)
+
+    def test_upload_book(self):
+        self.uploader.create_book()
+        self.uploader.upload_book("pdf", b'somebook8302')
+
+    @patch.multiple(ImageInterface, __abstractmethods__ = set(),
+        getBytes = MagicMock(return_value=b'1234'), 
+        ext=PropertyMock(return_value="png"),
+        name=PropertyMock(return_value="test"))
+    def test_mock(self):
+        mock = ImageInterface("123", "aaa")
+
+        self.assertEqual(mock.ext, 'png')
+        self.assertEqual(mock.getBytes(), b'1234')
+
+    @patch.multiple(ImageInterface, __abstractmethods__ = set(),
+        getBytes = MagicMock(return_value=b'1234'), 
+        ext=PropertyMock(return_value="png"),
+        name=PropertyMock(return_value="test"))
+    def test_upload_page_by_page(self):
+        self.uploader.create_book()
+
+        pages = [["Lorem pus", [ImageInterface("", ""), ImageInterface("", "")]],
+                 ["Leom sim", [ImageInterface("", "")]]]
+
+        for text, img in pages:
+            self.uploader.save_page(text, img)
+
+    def tearDown(self):
+        super().tearDown()
+        self.uploader._storage.deleteBucket()
+
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+# python -m Tests.BusinessLogic.Database.TestBookUploader

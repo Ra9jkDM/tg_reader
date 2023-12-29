@@ -55,6 +55,7 @@ class MinIO(FileStorageInterface):
             print("error occurred when deleting object", error)
 
     def deleteBucket(self):
+        self.removeFolder('')
         self._client.remove_bucket(self._BUCKET)
 
 

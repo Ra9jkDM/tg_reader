@@ -28,6 +28,14 @@ class TestMinIO(unittest.TestCase):
         except:
             self.fail("Can not remove folder in bucket")
 
+    def test_delete_not_empty_bucket(self):
+        for i in range(1, 4):
+            self.storage.uploadFile("txt", f"{i}.txt", b"1234_test")
+        
+        for i in range(1, 7):
+            self.storage.uploadFile("upload", f"{i}.pdf", b"1234_test")
+          
+
     @classmethod
     def tearDownClass(cls):
         cls.storage.deleteBucket()

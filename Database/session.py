@@ -24,6 +24,6 @@ def session(func):
         self.ENGINE = getEngine()
 
         with Session(autoflush=True, bind=self.ENGINE) as db:
-            return func(self, db)
+            return func(self, db, *args, **kwargs)
     
     return test_create

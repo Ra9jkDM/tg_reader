@@ -8,3 +8,14 @@ Telegram bot for reading books
 - Выбор книги для чтения из ранее загруженных
 - Навигация по страницам
 - Отображение изображений из книг
+- Создание заметок
+
+#### Зависимости
+
+- PostgreSQL
+- MinIO
+
+#### Запуск
+
+    source .venv/bin/activate
+    export $(cat .env)
