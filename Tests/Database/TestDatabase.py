@@ -68,6 +68,21 @@ class TestDatabase(Base):
         self.assertEqual(tmp.preferences[KEY], "_RUS_", 
                 "Can not edit JSON value")
 
+    @session
+    def test_add_new_key_in_user_json_preferences(self, db):
+        KEY = "chars_on_page"
+        db.add(User(social_id = "123456789", preferences={}))
+        db.commit()
+        
+        user = db.query(User).first()
+        user.preferences[KEY] = 200
+
+        db.commit()
+
+        tmp = db.query(User).first()
+        self.assertEqual(tmp.preferences[KEY], 200, 
+                "Can not add new key in JSON value")
+
 
     def _create_user_with_books(self, db):
         user = User(social_id = "123456789", preferences={"lang":"EN", "char": 140})

@@ -5,6 +5,8 @@ from Tests.BusinessLogic.Database.TestDatabase import *
 from Tests.BusinessLogic.Database.TestBook import *
 from Tests.BusinessLogic.Database.TestBookUploader import *
 from Tests.BusinessLogic.Database.TestPage import *
+from Tests.BusinessLogic.Database.TestNote import *
+from Tests.BusinessLogic.Database.TestPreferences import *
 
 # Database
 from Tests.Database.TestDatabase import *

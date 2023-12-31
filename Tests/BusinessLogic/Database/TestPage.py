@@ -61,9 +61,25 @@ class TestPage(Base):
 
         self.assertEqual(page.text, "30 page")
 
-    # @session
-    # def _get_user(self, db, id):
-    #     return db.query(User).filter(User.social_id == id).first()
+    def test_get_part_of_page(self):
+        page = self.page.get_part_of_page(33)
+        self.assertEqual(page.text, '''Returns the result of calling the first argument, which
+	must be a function, with the remaining arguments as parameters.''')
+
+    def test_get_next_part_of_page(self):
+        self.page._set_chars_from_start(235)
+
+        page = self.page.get_part_of_page(33)
+        self.assertEqual(page.text, '''The first argument must be the result of an evaluation
+	that yields a value of function type (as distinct from
+	a predefined function such as print).''')
+
+    def test_get_part_of_two_pages(self):
+        self.page._set_chars_from_start(540)
+
+        page = self.page.get_part_of_page(33)
+        self.assertEqual(page.text, '''d error value is non-nil, execution stops. When SQLAlchemy issues a single INSERT statement, to fulfill the contract of having the “last insert identifier” available, a RETURNING clause is added to the INSERT statement which specifies the primary key columns should be returned after the statement completes.''')
+
 
     def tearDown(self):
         super().tearDown()

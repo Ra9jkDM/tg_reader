@@ -6,6 +6,8 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session, relationship
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.sql import text
 
+from .preferences import *
+
 from os import environ
 
 USERNAME: Final = environ.get("DATABASE_USERNAME") 
@@ -31,7 +33,7 @@ class User(Base):
 
     social_id: Mapped[String] = mapped_column(String(15), unique=True, nullable=False)
     current_book: Mapped[int] = mapped_column(Integer, nullable=True)
-    preferences: Mapped[JSON] = mapped_column(MutableDict.as_mutable(JSON), nullable=True)
+    preferences: Mapped[JSON] = mapped_column(MutableDict.as_mutable(JSON), nullable=False, default={CHARS_ON_PAGE: 350})
 
     books: Mapped[List["UserBook"]] = relationship("UserBook", back_populates="user", cascade="all, delete", passive_deletes=True)
     notes: Mapped[List["Note"]] = relationship("Note", back_populates="user", cascade="all, delete", passive_deletes=True)
@@ -65,7 +67,7 @@ class UserBook(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), primary_key=True)
     book_id: Mapped[int] = mapped_column(ForeignKey("book.id", ondelete="CASCADE"), primary_key=True)
 
-    bookmark: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    bookmark: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     number_of_chars: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     user: Mapped["User"] = relationship("User", back_populates="books")
