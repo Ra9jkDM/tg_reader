@@ -1,6 +1,8 @@
 import unittest
 
 # BL
+from Tests.BusinessLogic.TestPageSlicer import *
+
 from Tests.BusinessLogic.Database.TestDatabase import *
 from Tests.BusinessLogic.Database.TestBook import *
 from Tests.BusinessLogic.Database.TestBookUploader import *

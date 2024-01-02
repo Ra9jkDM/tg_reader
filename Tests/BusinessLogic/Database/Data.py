@@ -52,8 +52,10 @@ class Data:
         page32 = Page(book_id=book2.id, page_number=32, text="32 page", number_of_images=0)
         page33 = Page(book_id=book2.id, page_number=33, text=self.long_text, number_of_images=0)
         page34 = Page(book_id=book2.id, page_number=34, text=self.long_text2, number_of_images=0)
+        page35 = Page(book_id=book2.id, page_number=35, text="s35 text__text_123.", number_of_images=0)
+        page36 = Page(book_id=book2.id, page_number=36, text="end", number_of_images=0)
 
-        self._save(db, [page1, page2, page30, page31, page32, page33, page34])
+        self._save(db, [page1, page2, page30, page31, page32, page33, page34, page35, page36])
 
         # - Create images
         minio = MinIO()

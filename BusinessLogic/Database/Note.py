@@ -6,15 +6,16 @@ from Database.model import User, Note as DB_Note, UserBook
 
 
 class Note:
-    def __init__(self, id):
+    def __init__(self, id, db):
         self._id = id
+        self._db = db
 
     @session
     def create(self, db, text):
         active_book = self._get_current_book(db)
-        current_page = self._get_current_page(db, active_book)
+        current_page = self._db.get_user_book(db, self._id, active_book).bookmark
 
-        note = self._get_note(db, active_book, current_page)
+        note = self._db.get_note(db, active_book, current_page)
 
         if note:
             self._append_note(db, note, text)
@@ -25,7 +26,7 @@ class Note:
     @session
     def get_all(self, db):
         active_book = self._get_current_book(db)
-        notes = self._get_notes(db, active_book)
+        notes = self._db.get_notes(db, active_book)
         notes = self._convert(notes)
         
         return notes
@@ -33,41 +34,24 @@ class Note:
     @session
     def delete(self, db, page_number):
         active_book = self._get_current_book(db)
-        note = self._get_note(db, active_book, page_number)
+        note = self._db.get_note(db, active_book, page_number)
         self._delete_note(db, note)
 
 
     def _get_current_book(self, db):
-        user = db.query(User).filter(User.id == self._id).first()
-        return user.current_book
-
-    def _get_note(self, db, book, page):
-        note = db.query(DB_Note).filter(DB_Note.book_id == book,
-                                        DB_Note.page == page).first()
-        return note
-
-    def _get_notes(self, db, active_book):
-        notes = db.query(DB_Note).filter(DB_Note.user_id == self._id,
-                                    DB_Note.book_id == active_book).all()
-        return notes
-
-    def _get_current_page(self, db, active_book):
-        page = db.query(UserBook).filter(UserBook.user_id == self._id,
-                                        UserBook.book_id == active_book).first().bookmark
-        return page
+        return self._db.get_user(db, self._id).current_book
 
     def _create_note(self, db, active_book, current_page, text):
         note = DB_Note(user_id = self._id, book_id = active_book, page = current_page, text = text)
-        db.add(note)
-        db.commit()
+        self._db.save(db, note)
 
     def _delete_note(self, db, note):
         db.delete(note)
-        db.commit()
+        self._db.commit(db)
     
     def _append_note(self, db, note, text):
         note.text += "\n" + text
-        db.commit()
+        self._db.commit(db)
 
     def _convert(self, notes):
         result = []

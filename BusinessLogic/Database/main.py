@@ -28,22 +28,24 @@
 
 from Database.session import session
 from Database.model import User as DB_User
+from Database.DatabaseController import DatabaseController
 from .User import User
 
 class Database:
+    def __init__(self):
+        self._db = DatabaseController()
+
     @session
     def get_user(self, db, social_id):
-        user = db.query(DB_User).filter(DB_User.social_id == social_id).first()
+        user = self._db.get_user_by_social_id(db, social_id)
 
         if user:
-            return User(user.id)
+            return User(user.id, self._db)
 
     @session
     def register_user(self, db, social_id):
         new_user = DB_User(social_id = social_id)
-
-        db.add(new_user)
-        db.commit()
+        self._db.save(new_user)
         
 
 if __name__ == "__main__":

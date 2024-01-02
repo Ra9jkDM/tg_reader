@@ -35,7 +35,7 @@ class TestBookUploader(Base):
 
     def test_upload_book(self):
         self.uploader.create_book()
-        self.uploader.upload_book("pdf", b'somebook8302')
+        self.uploader.upload_book(b'somebook8302', "pdf")
 
     @patch.multiple(ImageInterface, __abstractmethods__ = set(),
         get_bytes = MagicMock(return_value=b'1234'), 
@@ -62,7 +62,7 @@ class TestBookUploader(Base):
 
     def tearDown(self):
         super().tearDown()
-        self.uploader._storage.delete_bucket()
+        self.uploader._minio.delete_bucket()
 
 
 
