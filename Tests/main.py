@@ -20,6 +20,9 @@ from Tests.FileStorage.TestMinIO import *
 from Tests.Readers.PDF.TestImage import *
 from Tests.Readers.PDF.TestReader import *
 
+# Language
+from Tests.BusinessLogic.Language.TestLanguageController import TestLanguageController
+
 if __name__ == "__main__":
     unittest.main()
 

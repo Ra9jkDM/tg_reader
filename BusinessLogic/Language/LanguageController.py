@@ -1,6 +1,8 @@
 import json
+import os
 
-# ToDo: Test
+PATH = "BusinessLogic/Language/data"
+
 class LanguageController:
     _lang = "ru"
 
@@ -9,7 +11,7 @@ class LanguageController:
         self._load_dict()
 
     def _load_dict(self):
-        with open(f"data/{self._lang}") as file:
+        with open(f"{PATH}/{self._lang}.json") as file:
             self._data = json.load(file)
 
 
