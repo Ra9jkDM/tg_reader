@@ -8,19 +8,17 @@ from BusinessLogic.Database.Book import Book
 
 from Tests.Database.Base import Base
 
-from .Data import Data, id_1, id_2, id_3
-
-
+from .Data.BookData import BookData, id
 
 class TestBook(Base): 
     def setUp(self):
         super().setUp()   
 
-        self.data = Data()
+        self.data = BookData()
         self.data.create()
 
         db = Database()
-        user = db.get_user(id_2)
+        user = db.get_user(id)
         self.book = user.book
 
     def test_get_all_books(self):
@@ -31,7 +29,7 @@ class TestBook(Base):
     def test_set_active_book(self):
         self.book.set(2)
 
-        user = self._get_user(id_2)
+        user = self._get_user(id)
 
         self.assertEqual(user.current_book, 3, "Set wrong 'current' book")
 

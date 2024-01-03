@@ -127,11 +127,27 @@ class TestPageSlicer(unittest.TestCase):
 
         # Из-за особенностей реализации
         self.assertEqual(result2.text[2:], result_4.text[:-5])
+    
 
     def test_previous_slice_2_pages(self):
         result = self.slicer.previous_slice_2_pages(text, text_2, 10, 20)
 
-        self.assertEqual(result.text, "производства.")
+        self.assertEqual(result.text, "производства.\nФрезерные ")
+
+    def test_previous_slice_2_pages_1(self):
+        result = self.slicer.previous_slice_2_pages(text, text_2, 10, 20)
+        result = self.slicer.previous_slice(text, result.amount, 20)
+
+        self.assertEqual(result.text, "общий уровень культуры ")
+    
+    def test_previous_slice_2_pages_2(self):
+        text = "10 test ee"
+        text2 = "tExt one size"
+        text3 = "split two piece"
+        result = self.slicer.previous_slice_2_pages(text2, text3, 10, 15)
+        result = self.slicer.previous_slice_2_pages(text, text2, result.amount, 10)
+
+        self.assertEqual(result.text, "test ee\ntExt ")
 
     def test_is_enough_previous_true(self):
         result = self.slicer.check_is_enough_previous("a"*10, 5, 5)

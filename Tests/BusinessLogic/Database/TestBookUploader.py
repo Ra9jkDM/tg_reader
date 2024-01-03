@@ -6,9 +6,9 @@ from BusinessLogic.Database.Book import Book
 from BusinessLogic.Database.BookUploader import BookUploader
 
 from Tests.Database.Base import Base
-
-from .Data import Data, id_1, id_2, id_3
 from Readers.ImageInterface import ImageInterface
+
+from .Data.BookUploaderData import BookUploaderData, id
 
 
 book_name = "ZTest book"
@@ -17,11 +17,11 @@ class TestBookUploader(Base):
     def setUp(self):
         super().setUp()   
 
-        self.data = Data()
+        self.data = BookUploaderData()
         self.data.create()
 
         db = Database()
-        user = db.get_user(id_2)
+        user = db.get_user(id)
         self.book = user.book
         self.uploader = self.book.create(book_name, 4)
 

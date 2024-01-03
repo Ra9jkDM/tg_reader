@@ -45,7 +45,7 @@ class Database:
     @session
     def register_user(self, db, social_id):
         new_user = DB_User(social_id = social_id)
-        self._db.save(new_user)
+        self._db.save(db, new_user)
         
 
 if __name__ == "__main__":

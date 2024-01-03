@@ -5,33 +5,32 @@ from BusinessLogic.Database.main import Database
 
 from Tests.Database.Base import Base
 
-from .Data import Data, id_1, id_2, id_3
-
+from .Data.DatabaseData import DatabaseData, id, id_unknown
 
 
 class TestDatabase(Base): 
     def setUp(self):
         super().setUp()   
 
-        self.data = Data()
+        self.data = DatabaseData()
         self.data.create()
         
         self.db = Database()
 
     def test_get_existing_user(self):
-        user = self.db.get_user(id_1)
-
+        user = self.db.get_user(id)
+        
         self.assertTrue(user, "Can not find existing user")
 
     def test_get_unknown_user(self):
-        user = self.db.get_user(id_3)
+        user = self.db.get_user(id_unknown)
 
         self.assertFalse(user)
 
     def test_register_new_user(self):
-        self.db.register_user(id_3)
+        self.db.register_user(id_unknown)
 
-        user = self.db.get_user(id_3)
+        user = self.db.get_user(id_unknown)
         
         self.assertTrue(user)
 

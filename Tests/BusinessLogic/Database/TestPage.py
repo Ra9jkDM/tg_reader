@@ -8,7 +8,7 @@ from BusinessLogic.Database.Book import Book
 
 from Tests.Database.Base import Base
 
-from .Data import Data, id_1, id_2, id_3
+from .Data.PageData import PageData, id
 
 
 
@@ -16,12 +16,12 @@ class TestPage(Base):
     def setUp(self):
         super().setUp()   
 
-        self.data = Data()
+        self.data = PageData()
         self.data.create()
 
         db = Database()
-        user = db.get_user(id_1)
-        self.page = user.page
+        self.user = db.get_user(id)
+        self.page = self.user.page
 
     def test_get_page_by_page_number_without_images(self):
         page = self.page.get(1)
@@ -40,55 +40,111 @@ class TestPage(Base):
 
         self.assertEqual(bookmark, 30)
 
-    # def test_get_current(self):
-    #     page = self.page.get(31)
-
-    #     page = self.page.get_current()
-
-    #     self.assertEqual(page.text, "31 page")
-
-    # def test_get_next(self):
-    #     page = self.page.get(31)
-
-    #     page = self.page.get_next()
-
-    #     self.assertEqual(page.text, "32 page")
-
-    # def test_get_previous(self):
-    #     page = self.page.get(31)
-
-    #     page = self.page.get_previous()
-
-    #     self.assertEqual(page.text, "30 page")
-
-    def test_get_part_of_page(self):
+    def test_get_next_part(self):
         page = self.page.get(33)
-        # page = self.page.get_part_of_page(33)
+        page = self.page.get_next_part()
+        self.assertEqual(page.text, '''as parameters.
+Thus "call .X.Y 1 2" is, in Go notation, dot.X.Y(1, 2) where
+Y is a func-valued field,''')
+
+    def test_get_next_part_2(self):
+        page = self.page.get(33)
+
+        page = self.page.get_next_part()
+        page = self.page.get_next_part()
+
+        self.assertEqual(page.text, ''' map entry, or the like.
+The first argument must be the result of an evaluation
+that yields a value of ''')
+
+    def test_get_next_part_on_next_page(self):
+        self.user.preferences.chars_on_page = 5
+        page = self.page.get(30)
+
+        page = self.page.get_next_part()
+
+        self.assertEqual(page.text, '''spt\nnum ''')
+
+    def test_get_previous_part(self):
+        page = self.page.get(33)
+
+        page = self.page.get_next_part()
+        page = self.page.get_next_part()
+
+        page = self.page.get_previous_part()
+
+        self.assertEqual(page.text, '''as parameters.
+Thus "call .X.Y 1 2" is, in Go notation, dot.X.Y(1, 2) where
+Y is a func-valued field,''')
+
+    def test_get_previous_part_2(self):
+        page = self.page.get(33)
+
+        page = self.page.get_next_part()
+        page = self.page.get_next_part()
+
+        page = self.page.get_previous_part()
+        page = self.page.get_previous_part()
+
         self.assertEqual(page.text, '''Returns the result of calling the first argument, which
-	must be a function, with the remaining arguments as parameters.''')
+must be a function, with the remaining arguments ''')
 
-    def test_get_next_part_of_page(self):
-        # self.page._set_chars_from_start(235)
-        self.page.get(33)
-        page = self.page.get_part_of_page()
-        self.assertEqual(page.text, '''The first argument must be the result of an evaluation
-	that yields a value of function type (as distinct from
-	a predefined function such as print).''')
+    def test_get_previous_part_on_previous_page(self):
+        self.user.preferences.chars_on_page = 10
+        page = self.page.get(31)
+        self.page._set_chars_from_start(6)
 
-    def test_get_part_of_two_pages(self):
-        self.page._set_chars_from_start(540)
+        page = self.page.get_previous_part()
 
+        self.assertEqual(page.text, "pAge spt\nnum 31")
+
+    def test_get_previous_part_on_previous_page_2(self):
+        self.user.preferences.chars_on_page = 4
+        page = self.page.get(31)
+        self.page._set_chars_from_start(3)
+
+        page = self.page.get_previous_part()
+        page = self.page.get_previous_part()
+
+        self.assertEqual(page.text, "pAge")
+
+    def test_get_previous_part_on_previous_page_2_1(self):
+        self.user.preferences.chars_on_page = 5
+        page = self.page.get(31)
+        self.page._set_chars_from_start(3)
+
+        page = self.page.get_previous_part() # change page
+        self.assertEqual(page.text, "spt\nnum")
+        page = self.page.get_previous_part()
+        self.assertEqual(page.text, "30 pAge ")
+        page = self.page.get_previous_part() # change page
+
+        self.assertEqual(page.text, "__eq__")
+
+    def test_get_previous_part_on_previous_page_3(self):
+        self.user.preferences.chars_on_page = 9
+        page = self.page.get(31)
+        self.page._set_chars_from_start(3)
+
+        page = self.page.get_previous_part()
+        page = self.page.get_previous_part()
+
+
+        self.assertEqual(page.text, "__eq__\n30 ")
+
+    def test_get_previous_then_next_part(self):
         page = self.page.get(33)
-        self.assertEqual(page.text, '''d error value is non-nil, execution stops. When SQLAlchemy issues a single INSERT statement, to fulfill the contract of having the “last insert identifier” available, a RETURNING clause is added to the INSERT statement which specifies the primary key columns should be returned after the statement completes.''')
 
-    def test_get_part_then_get_some_page(self):
-        self.page.get(33)
-        self.page._set_chars_from_start(8)
-        self.page.get_part_of_page()
+        page = self.page.get_next_part()
+        page = self.page.get_next_part()
 
-        page = self.page.get(35)
+        page = self.page.get_previous_part()
 
-        self.assertEqual(page.text, "s35 text__text_123.")
+        page = self.page.get_next_part()
+
+        self.assertEqual(page.text, ''' map entry, or the like.
+The first argument must be the result of an evaluation
+that yields a value of ''')
 
     def tearDown(self):
         super().tearDown()

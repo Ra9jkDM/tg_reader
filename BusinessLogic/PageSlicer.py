@@ -32,6 +32,7 @@ class PageSlicer:
         end = self._get_nearest_separator(text, amount) - 1
 
         text = text[end::-1]
+        # print("PS:", start, len(text))
         return SliceDTO(**{'amount': start-len(text),
                             'text': text})
 
@@ -50,9 +51,13 @@ class PageSlicer:
 
     def previous_slice_2_pages(self, text, text_2, start, amount):
         chunk = text_2[:start]
-        chunk_2_len = len(chunk)
+        chunk_2_len = amount - len(chunk)
+        # print("start:", start, amount)
 
-        return self.previous_slice(text, len(text), chunk_2_len)
+        chunk2 = self.previous_slice(text, len(text), chunk_2_len)
+
+        return SliceDTO(**{'amount': chunk2.amount,
+                             'text': chunk2.text + "\n" + chunk})
         
 
     def _get_nearest_separator(self, text, start):

@@ -9,6 +9,8 @@ class Base(unittest.TestCase):
     def setUp(self):
         set_test_env()
         self.ENGINE = _get_engine()
+
+        delete_db(self.ENGINE)
         create_db(self.ENGINE)
 
     def tearDown(self):

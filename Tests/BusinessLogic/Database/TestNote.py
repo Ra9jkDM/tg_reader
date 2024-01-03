@@ -8,22 +8,21 @@ from BusinessLogic.Database.Book import Book
 
 from Tests.Database.Base import Base
 
-from .Data import Data, id_1, id_2, id_3
-
+from .Data.NoteData import NoteData, id, id_second
 
 
 class TestNote(Base): 
     def setUp(self):
         super().setUp()   
 
-        self.data = Data()
+        self.data = NoteData()
         self.data.create()
 
         db = Database()
-        user = db.get_user(id_1)
+        user = db.get_user(id)
         self.note = user.note
 
-        user2 = db.get_user(id_2)
+        user2 = db.get_user(id_second)
         self.note2 = user2.note
 
     def test_get_all_notes(self):

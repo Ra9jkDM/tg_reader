@@ -68,7 +68,8 @@ class UserBook(Base):
     book_id: Mapped[int] = mapped_column(ForeignKey("book.id", ondelete="CASCADE"), primary_key=True)
 
     bookmark: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    number_of_chars: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    number_of_chars: Mapped[int] = mapped_column(Integer, default=0, nullable=False) # Кол-во символов от начало станицы
+    chunk_size: Mapped[int] = mapped_column(Integer, default=0, nullable=False) # Кол-во символов на данном отрезке
 
     user: Mapped["User"] = relationship("User", back_populates="books")
     book: Mapped["Book"] = relationship("Book", back_populates="users")

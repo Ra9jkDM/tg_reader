@@ -8,7 +8,7 @@ from BusinessLogic.Database.Book import Book
 
 from Tests.Database.Base import Base
 
-from .Data import Data, id_1, id_2, id_3
+from .Data.PreferencesData import PreferencesData, id
 
 
 
@@ -16,11 +16,11 @@ class TestPreferences(Base):
     def setUp(self):
         super().setUp()   
 
-        self.data = Data()
+        self.data = PreferencesData()
         self.data.create()
 
         db = Database()
-        user = db.get_user(id_1)
+        user = db.get_user(id)
         self.preferences = user.preferences
 
     def test_set_and_get_chars_on_page(self):
