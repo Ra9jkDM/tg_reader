@@ -24,6 +24,9 @@ class Page:
         self._page_number = page_number
 
         page = self._get_full_page(db)
+
+        self._set_is_next(True)
+
         chunk = self._slicer.slice(page.text, 0, self._chars_on_page)
         page = self._convert(self._page_number, chunk.text, page.images)
 
@@ -33,9 +36,20 @@ class Page:
 
     @session
     def get_next_part(self, db):
+        page = self._get_next_part()
+        # print(page)
+        if not self._get_is_next(db):
+            page = self._get_next_part()
+            # print(page)
+        self._set_is_next(True)
+        return page
+
+    @session
+    def _get_next_part(self, db):
         self._page_number = self._get_bookmark(db)
         page = self._get_full_page(db)
         start = self._get_chars_from_start(db)
+
 
         if self._slicer.check_is_enough(page.text, start, self._chars_on_page):
             chunk = self._slicer.slice(page.text, start, self._chars_on_page)
@@ -53,43 +67,109 @@ class Page:
 
     @session
     def get_previous_part(self, db):
+        page = self._get_previous_part()
+        self._set_chunk_size(-1)
+        # print(page)
+        if self._get_is_next(db):
+            page = self._get_previous_part()
+            # print(page)
+        self._set_is_next(False)
+        return page
+
+    @session
+    def _get_previous_part(self, db):
         self._page_number = self._get_bookmark(db)
         page = self._get_full_page(db)
         start = self._get_chars_from_start(db)
         chunk_size = self._get_chunk_size(db)
 
-        # print(start, self._chars_on_page, len(page.text), self._page_number,
-        # self._slicer.check_is_enough_previous(page.text, start-chunk_size, self._chars_on_page))
-
-        if self._slicer.check_is_enough_previous(page.text, start, self._chars_on_page): # self._chars_on_page
+        if self._slicer.check_is_enough_previous(page.text, start, self._chars_on_page): 
+            # print("\n\nTrue", start, chunk_size)
             chunk = self._slicer.previous_slice(page.text, start, self._chars_on_page, chunk_size)
-            chunk = self._slicer.previous_slice(page.text, chunk.amount, self._chars_on_page)
-            page = self._convert(self._page_number, chunk.text, [])
-            # print(chunk)
+            # print("gg",chunk, chunk.amount, len(chunk.text), chunk_size)
 
+            page = self._convert(self._page_number, chunk.text, [])
+            # print("this",chunk, chunk.amount, len(chunk.text))
+            self._update_state(db, chunk.amount, len(chunk.text))
+            return page
             
-            # print("ch:", chunk.amount, len(chunk.text))
-            self._update_state(db, chunk.amount+len(chunk.text), len(chunk.text))
         else:
+            # print("\n\nFalse")
             self._page_number -= 1
             self._set_bookmark(db)
 
             page2 = self._get_full_page(db)
             chunk = self._slicer.previous_slice_2_pages(page2.text, page.text, start, self._chars_on_page)
-            # print(chunk)
+            # print(chunk, chunk.amount+len(chunk.text), len(page2.text)-chunk.amount)
 
             page = self._convert(self._page_number, chunk.text, page.images)
-
-            
-            # print("ch:", chunk.amount, len(page2.text))
-
-            # if chunk.amount < 0:
-            #     chunk.amount *= -1
-        
-        
-            self._update_state(db, chunk.amount, len(chunk.text))
+             
+            self._update_state(db, chunk.amount, len(page2.text)-chunk.amount)
 
         return page
+
+
+    # @session
+    # def _get_previous_part(self, db):
+    #     self._page_number = self._get_bookmark(db)
+    #     page = self._get_full_page(db)
+    #     start = self._get_chars_from_start(db)
+    #     chunk_size = self._get_chunk_size(db)
+
+    #     # print(start, self._chars_on_page, len(page.text), self._page_number,
+    #     # self._slicer.check_is_enough_previous(page.text, start-chunk_size, self._chars_on_page))
+
+    #     if self._slicer.check_is_enough_previous(page.text, start, self._chars_on_page): # self._chars_on_page
+    #         print("\n\nTrue", start, chunk_size)
+    #         chunk = self._slicer.previous_slice(page.text, start, self._chars_on_page, chunk_size)
+    #         print("gg",chunk, chunk.amount, len(chunk.text), chunk_size)
+
+    #         page = self._convert(self._page_number, chunk.text, [])
+    #         print("this",chunk, chunk.amount, len(chunk.text))
+    #         self._update_state(db, chunk.amount, len(chunk.text))
+    #         return page
+
+    #         # if self._slicer.check_is_enough_previous(page.text, chunk.amount, self._chars_on_page):
+    #         #     print("\t - true")
+    #         #     chunk = self._slicer.previous_slice(page.text, chunk.amount, self._chars_on_page)
+    #         #     page = self._convert(self._page_number, chunk.text, [])
+    #         #     print("this",chunk, chunk.amount, len(chunk.text))
+    #         #     self._update_state(db, chunk.amount, len(chunk.text))
+    #         #     return page
+    #         # else:
+    #         #     print("\t - false")
+    #         #     return self._get_new_page(db, page, chunk.amount)
+
+
+            
+    #     else:
+    #         print("\n\nFalse")
+    #         self._page_number -= 1
+    #         self._set_bookmark(db)
+
+    #         page2 = self._get_full_page(db)
+    #         chunk = self._slicer.previous_slice_2_pages(page2.text, page.text, start, self._chars_on_page)
+    #         print(chunk, chunk.amount+len(chunk.text), len(page2.text)-chunk.amount)
+
+    #         page = self._convert(self._page_number, chunk.text, page.images)
+             
+    #         self._update_state(db, chunk.amount, len(page2.text)-chunk.amount)
+
+    #     return page
+
+    # def _get_new_page(self, db, page, start):
+    #         self._page_number -= 1
+    #         self._set_bookmark(db)
+
+    #         page2 = self._get_full_page(db)
+    #         chunk = self._slicer.previous_slice_2_pages(page2.text, page.text, start, self._chars_on_page)
+    #         print(chunk, chunk.amount+len(chunk.text), len(page2.text)-chunk.amount)
+
+    #         page = self._convert(self._page_number, chunk.text, page.images)
+             
+    #         self._update_state(db, chunk.amount, len(page2.text)-chunk.amount)
+
+    #         return page
 
     def _get_full_page(self, db):
         self._load_user_info(db)
@@ -112,7 +192,7 @@ class Page:
     def _update_state(self, db, chars_from_start, chunk_size):
         self._set_chars_from_start(chars_from_start)
         self._set_bookmark(db)
-        self._set_chunk_size(db, chunk_size)
+        self._set_chunk_size(chunk_size)
 
 
     
@@ -145,6 +225,17 @@ class Page:
         obj = self._get_user_book(db)
         return obj.bookmark
 
+    @session
+    def _set_is_next(self, db, is_next):
+        obj = self._get_user_book(db)
+        obj.is_next = is_next
+        self._db.commit(db)
+
+    def _get_is_next(self, db):
+        obj = self._get_user_book(db)
+        return obj.is_next
+
+    @session
     def _set_chunk_size(self, db, chunk_size):
         obj = self._get_user_book(db)
         obj.chunk_size = chunk_size

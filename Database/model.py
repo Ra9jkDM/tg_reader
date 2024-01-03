@@ -70,6 +70,7 @@ class UserBook(Base):
     bookmark: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     number_of_chars: Mapped[int] = mapped_column(Integer, default=0, nullable=False) # Кол-во символов от начало станицы
     chunk_size: Mapped[int] = mapped_column(Integer, default=0, nullable=False) # Кол-во символов на данном отрезке
+    is_next: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False) # Действие пользователя: получал следующую/предыдущую страницу
 
     user: Mapped["User"] = relationship("User", back_populates="books")
     book: Mapped["Book"] = relationship("Book", back_populates="users")

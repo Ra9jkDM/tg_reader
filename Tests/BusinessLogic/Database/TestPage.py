@@ -67,32 +67,40 @@ that yields a value of ''')
 
     def test_get_previous_part(self):
         page = self.page.get(33)
-
+        # print(page)
         page = self.page.get_next_part()
+        # print(page)
         page = self.page.get_next_part()
+        # print(page)
 
         page = self.page.get_previous_part()
+        # print(page)
 
-        self.assertEqual(page.text, '''as parameters.
-Thus "call .X.Y 1 2" is, in Go notation, dot.X.Y(1, 2) where
-Y is a func-valued field,''')
+        self.assertEqual(page.text, '''as parameters.\nThus "call .X.Y 1 2" is, in Go notation, dot.X.Y(1, 2) where\nY is a func-valued field,''')
 
     def test_get_previous_part_2(self):
-        page = self.page.get(33)
+        page_1 = self.page.get(33)
+        # print(page_1)
+        page = self.page.get_next_part()
+        # print(page)
 
         page = self.page.get_next_part()
-        page = self.page.get_next_part()
+        # print(page)
+
 
         page = self.page.get_previous_part()
+        # print(page)
         page = self.page.get_previous_part()
+        # print(page)
 
-        self.assertEqual(page.text, '''Returns the result of calling the first argument, which
-must be a function, with the remaining arguments ''')
+        self.assertEqual(page.text, page_1.text)
 
     def test_get_previous_part_on_previous_page(self):
         self.user.preferences.chars_on_page = 10
         page = self.page.get(31)
+
         self.page._set_chars_from_start(6)
+        self.page._set_is_next(False)
 
         page = self.page.get_previous_part()
 
@@ -101,30 +109,41 @@ must be a function, with the remaining arguments ''')
     def test_get_previous_part_on_previous_page_2(self):
         self.user.preferences.chars_on_page = 4
         page = self.page.get(31)
+
         self.page._set_chars_from_start(3)
+        self.page._set_is_next(False)
 
         page = self.page.get_previous_part()
         page = self.page.get_previous_part()
 
-        self.assertEqual(page.text, "pAge")
+        self.assertEqual(page.text, "pAge ")
 
+
+# # Fix
     def test_get_previous_part_on_previous_page_2_1(self):
         self.user.preferences.chars_on_page = 5
         page = self.page.get(31)
+
         self.page._set_chars_from_start(3)
+        self.page._set_is_next(False)
 
         page = self.page.get_previous_part() # change page
         self.assertEqual(page.text, "spt\nnum")
+        # print("d",page)
         page = self.page.get_previous_part()
-        self.assertEqual(page.text, "30 pAge ")
+        # print("d",page)
+        self.assertEqual(page.text, "pAge ")
         page = self.page.get_previous_part() # change page
+        # print("d",page)
 
-        self.assertEqual(page.text, "__eq__")
+        self.assertEqual(page.text, "__eq__\n30 ")
 
     def test_get_previous_part_on_previous_page_3(self):
         self.user.preferences.chars_on_page = 9
         page = self.page.get(31)
+
         self.page._set_chars_from_start(3)
+        self.page._set_is_next(False)
 
         page = self.page.get_previous_part()
         page = self.page.get_previous_part()
@@ -134,13 +153,17 @@ must be a function, with the remaining arguments ''')
 
     def test_get_previous_then_next_part(self):
         page = self.page.get(33)
-
+        # print(page)
         page = self.page.get_next_part()
+        # print(page)
         page = self.page.get_next_part()
-
+        # print(page)
+        # print("prev")
         page = self.page.get_previous_part()
-
+        # print(page)
+        # print("next")
         page = self.page.get_next_part()
+        # print(page)
 
         self.assertEqual(page.text, ''' map entry, or the like.
 The first argument must be the result of an evaluation
