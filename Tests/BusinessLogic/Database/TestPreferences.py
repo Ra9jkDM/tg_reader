@@ -29,6 +29,12 @@ class TestPreferences(Base):
 
         self.assertEqual(num, 350)
 
+    def test_set_and_get_language(self):
+        self.preferences.language = "en"
+        lang = self.preferences.language
+
+        self.assertEqual(lang, "en")
+
 
 if __name__ == "__main__":
     unittest.main()

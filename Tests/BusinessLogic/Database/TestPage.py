@@ -67,31 +67,22 @@ that yields a value of ''')
 
     def test_get_previous_part(self):
         page = self.page.get(33)
-        # print(page)
+
         page = self.page.get_next_part()
-        # print(page)
         page = self.page.get_next_part()
-        # print(page)
 
         page = self.page.get_previous_part()
-        # print(page)
 
         self.assertEqual(page.text, '''as parameters.\nThus "call .X.Y 1 2" is, in Go notation, dot.X.Y(1, 2) where\nY is a func-valued field,''')
 
     def test_get_previous_part_2(self):
         page_1 = self.page.get(33)
-        # print(page_1)
-        page = self.page.get_next_part()
-        # print(page)
 
         page = self.page.get_next_part()
-        # print(page)
-
-
+        page = self.page.get_next_part()
+ 
         page = self.page.get_previous_part()
-        # print(page)
         page = self.page.get_previous_part()
-        # print(page)
 
         self.assertEqual(page.text, page_1.text)
 
@@ -118,8 +109,6 @@ that yields a value of ''')
 
         self.assertEqual(page.text, "pAge ")
 
-
-# # Fix
     def test_get_previous_part_on_previous_page_2_1(self):
         self.user.preferences.chars_on_page = 5
         page = self.page.get(31)
@@ -129,13 +118,11 @@ that yields a value of ''')
 
         page = self.page.get_previous_part() # change page
         self.assertEqual(page.text, "spt\nnum")
-        # print("d",page)
-        page = self.page.get_previous_part()
-        # print("d",page)
-        self.assertEqual(page.text, "pAge ")
-        page = self.page.get_previous_part() # change page
-        # print("d",page)
 
+        page = self.page.get_previous_part()
+        self.assertEqual(page.text, "pAge ")
+
+        page = self.page.get_previous_part() # change page
         self.assertEqual(page.text, "__eq__\n30 ")
 
     def test_get_previous_part_on_previous_page_3(self):
@@ -148,22 +135,16 @@ that yields a value of ''')
         page = self.page.get_previous_part()
         page = self.page.get_previous_part()
 
-
         self.assertEqual(page.text, "__eq__\n30 ")
 
     def test_get_previous_then_next_part(self):
         page = self.page.get(33)
-        # print(page)
+
         page = self.page.get_next_part()
-        # print(page)
         page = self.page.get_next_part()
-        # print(page)
-        # print("prev")
+
         page = self.page.get_previous_part()
-        # print(page)
-        # print("next")
         page = self.page.get_next_part()
-        # print(page)
 
         self.assertEqual(page.text, ''' map entry, or the like.
 The first argument must be the result of an evaluation

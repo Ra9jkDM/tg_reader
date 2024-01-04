@@ -16,7 +16,13 @@ class Preferences:
     def chars_on_page(self, number_of_chars):
         self._save_setting(CHARS_ON_PAGE, number_of_chars)        
 
-
+    @property
+    def language(self):
+        return self._get_setting(LANGUAGE)
+    
+    @language.setter
+    def language(self, lang):
+        self._save_setting(LANGUAGE, lang)
 
     @session
     def _get_setting(self, db, name):

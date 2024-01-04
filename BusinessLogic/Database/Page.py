@@ -37,10 +37,8 @@ class Page:
     @session
     def get_next_part(self, db):
         page = self._get_next_part()
-        # print(page)
         if not self._get_is_next(db):
             page = self._get_next_part()
-            # print(page)
         self._set_is_next(True)
         return page
 
@@ -54,7 +52,7 @@ class Page:
         if self._slicer.check_is_enough(page.text, start, self._chars_on_page):
             chunk = self._slicer.slice(page.text, start, self._chars_on_page)
             page = self._convert(self._page_number, chunk.text, [])
-        else:
+        else: # current text + text from next page
             self._page_number += 1
             page2 = self._get_full_page(db)
 
@@ -67,12 +65,11 @@ class Page:
 
     @session
     def get_previous_part(self, db):
-        page = self._get_previous_part()
-        self._set_chunk_size(-1)
-        # print(page)
-        if self._get_is_next(db):
+        page = self._get_previous_part() # use chunk_size one time
+
+        self._set_chunk_size(-1) # delete chunk_size, becouse it's stores for one piece of text
+        if self._get_is_next(db): # if is True upper page get current page
             page = self._get_previous_part()
-            # print(page)
         self._set_is_next(False)
         return page
 
@@ -84,104 +81,24 @@ class Page:
         chunk_size = self._get_chunk_size(db)
 
         if self._slicer.check_is_enough_previous(page.text, start, self._chars_on_page): 
-            # print("\n\nTrue", start, chunk_size)
             chunk = self._slicer.previous_slice(page.text, start, self._chars_on_page, chunk_size)
-            # print("gg",chunk, chunk.amount, len(chunk.text), chunk_size)
-
             page = self._convert(self._page_number, chunk.text, [])
-            # print("this",chunk, chunk.amount, len(chunk.text))
             self._update_state(db, chunk.amount, len(chunk.text))
             return page
             
-        else:
-            # print("\n\nFalse")
+        else: # current text + text from previous page
             self._page_number -= 1
-            self._set_bookmark(db)
-
             page2 = self._get_full_page(db)
+            
             chunk = self._slicer.previous_slice_2_pages(page2.text, page.text, start, self._chars_on_page)
-            # print(chunk, chunk.amount+len(chunk.text), len(page2.text)-chunk.amount)
-
             page = self._convert(self._page_number, chunk.text, page.images)
-             
             self._update_state(db, chunk.amount, len(page2.text)-chunk.amount)
 
         return page
 
 
-    # @session
-    # def _get_previous_part(self, db):
-    #     self._page_number = self._get_bookmark(db)
-    #     page = self._get_full_page(db)
-    #     start = self._get_chars_from_start(db)
-    #     chunk_size = self._get_chunk_size(db)
-
-    #     # print(start, self._chars_on_page, len(page.text), self._page_number,
-    #     # self._slicer.check_is_enough_previous(page.text, start-chunk_size, self._chars_on_page))
-
-    #     if self._slicer.check_is_enough_previous(page.text, start, self._chars_on_page): # self._chars_on_page
-    #         print("\n\nTrue", start, chunk_size)
-    #         chunk = self._slicer.previous_slice(page.text, start, self._chars_on_page, chunk_size)
-    #         print("gg",chunk, chunk.amount, len(chunk.text), chunk_size)
-
-    #         page = self._convert(self._page_number, chunk.text, [])
-    #         print("this",chunk, chunk.amount, len(chunk.text))
-    #         self._update_state(db, chunk.amount, len(chunk.text))
-    #         return page
-
-    #         # if self._slicer.check_is_enough_previous(page.text, chunk.amount, self._chars_on_page):
-    #         #     print("\t - true")
-    #         #     chunk = self._slicer.previous_slice(page.text, chunk.amount, self._chars_on_page)
-    #         #     page = self._convert(self._page_number, chunk.text, [])
-    #         #     print("this",chunk, chunk.amount, len(chunk.text))
-    #         #     self._update_state(db, chunk.amount, len(chunk.text))
-    #         #     return page
-    #         # else:
-    #         #     print("\t - false")
-    #         #     return self._get_new_page(db, page, chunk.amount)
-
-
-            
-    #     else:
-    #         print("\n\nFalse")
-    #         self._page_number -= 1
-    #         self._set_bookmark(db)
-
-    #         page2 = self._get_full_page(db)
-    #         chunk = self._slicer.previous_slice_2_pages(page2.text, page.text, start, self._chars_on_page)
-    #         print(chunk, chunk.amount+len(chunk.text), len(page2.text)-chunk.amount)
-
-    #         page = self._convert(self._page_number, chunk.text, page.images)
-             
-    #         self._update_state(db, chunk.amount, len(page2.text)-chunk.amount)
-
-    #     return page
-
-    # def _get_new_page(self, db, page, start):
-    #         self._page_number -= 1
-    #         self._set_bookmark(db)
-
-    #         page2 = self._get_full_page(db)
-    #         chunk = self._slicer.previous_slice_2_pages(page2.text, page.text, start, self._chars_on_page)
-    #         print(chunk, chunk.amount+len(chunk.text), len(page2.text)-chunk.amount)
-
-    #         page = self._convert(self._page_number, chunk.text, page.images)
-             
-    #         self._update_state(db, chunk.amount, len(page2.text)-chunk.amount)
-
-    #         return page
-
-    def _get_full_page(self, db):
-        self._load_user_info(db)
-
-        self._set_bookmark(db)
-
-        page = self._get_page(db)
-        images = self._get_images()
-
-        return self._convert(self._page_number, page.text, images)
-
-
+   
+    
     def _convert(self, page_number, text, images):
         return PageDTO(**{
             "page_number": page_number,
@@ -194,8 +111,15 @@ class Page:
         self._set_bookmark(db)
         self._set_chunk_size(chunk_size)
 
+    def _get_full_page(self, db):
+        self._load_user_info(db)
 
-    
+        self._set_bookmark(db)
+
+        page = self._get_page(db)
+        images = self._get_images()
+
+        return self._convert(self._page_number, page.text, images)
     
     def _get_page(self, db):
         return self._db.get_page(db, self._book, self._page_number)

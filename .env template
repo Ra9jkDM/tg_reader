@@ -1,4 +1,6 @@
 TOKEN=
+API_ID=
+API_HASH=
 
 S3_HOST=
 S3_PORT=

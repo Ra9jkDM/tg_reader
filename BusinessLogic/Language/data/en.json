@@ -1,3 +1,6 @@
 {
-    "unit-test": "Unit test"
+    "unit-test": "Unit test",
+    "lang": "Bot language: English",
+    "welcome": "Welcome to the telegram bot. It will help you get rid of doomscrolling and read books that you have always put off until later. Here are the commands that will come in handy: ",
+    "heavy_file":"The file could not be loaded.\nCurrent file size limit: 50MB."
 }

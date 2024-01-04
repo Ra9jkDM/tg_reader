@@ -33,7 +33,7 @@ class User(Base):
 
     social_id: Mapped[String] = mapped_column(String(15), unique=True, nullable=False)
     current_book: Mapped[int] = mapped_column(Integer, nullable=True)
-    preferences: Mapped[JSON] = mapped_column(MutableDict.as_mutable(JSON), nullable=False, default={CHARS_ON_PAGE: 350})
+    preferences: Mapped[JSON] = mapped_column(MutableDict.as_mutable(JSON), nullable=False, default={CHARS_ON_PAGE: 350, LANGUAGE: "ru"})
 
     books: Mapped[List["UserBook"]] = relationship("UserBook", back_populates="user", cascade="all, delete", passive_deletes=True)
     notes: Mapped[List["Note"]] = relationship("Note", back_populates="user", cascade="all, delete", passive_deletes=True)

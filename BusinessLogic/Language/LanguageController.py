@@ -4,7 +4,8 @@ import os
 PATH = "BusinessLogic/Language/data"
 
 class LanguageController:
-    _lang = "ru"
+    def __init__(self, lang="ru"):
+        self.set_language(lang)
 
     def set_language(self, lang):
         self._lang = lang

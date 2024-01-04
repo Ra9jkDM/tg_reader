@@ -23,6 +23,9 @@ from Tests.Readers.PDF.TestReader import *
 # Language
 from Tests.BusinessLogic.Language.TestLanguageController import TestLanguageController
 
+#UI
+from Tests.BusinessLogic.UI.TestTextQA import TestTextQA
+
 if __name__ == "__main__":
     unittest.main()
 
