@@ -20,7 +20,7 @@ class TextQA: # Questions & Answers
     @user
     def set_language(self, user, answers, lang): # ru, en
         user.preferences.language = lang
-
+        
         answers.set_language(lang)
         return answers.get("lang")
     
