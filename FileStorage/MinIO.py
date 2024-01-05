@@ -35,7 +35,7 @@ class MinIO(FileStorageInterface):
 
     def upload_file(self, folder: str, file_name: str, file: io.BytesIO) -> None:
         response = self._client.put_object(
-            self._BUCKET, f"{folder}/{file_name}", io.BytesIO(file), # type: ignore
+            self._BUCKET, f"{folder}/{file_name}", file, #io.BytesIO(file), # type: ignore
                     length=-1, part_size=5*1024*1024
         )
 

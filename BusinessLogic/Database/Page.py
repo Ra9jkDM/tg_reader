@@ -20,6 +20,12 @@ class Page:
         self._slicer = PageSlicer()
 
     @session
+    def get_current(self, db):
+        self._load_user_info(db)
+        self._page_number = self._get_bookmark(db)
+        return self.get(self._page_number)
+
+    @session
     def get(self, db, page_number):
         self._page_number = page_number
 
@@ -36,6 +42,8 @@ class Page:
 
     @session
     def get_next_part(self, db):
+        self._load_user_info(db)
+
         page = self._get_next_part()
         if not self._get_is_next(db):
             page = self._get_next_part()
@@ -48,8 +56,10 @@ class Page:
         page = self._get_full_page(db)
         start = self._get_chars_from_start(db)
 
+        max_page = self._get_book(db).number_of_pages
+        # print(max_page)
 
-        if self._slicer.check_is_enough(page.text, start, self._chars_on_page):
+        if self._slicer.check_is_enough(page.text, start, self._chars_on_page) or self._page_number == max_page:
             chunk = self._slicer.slice(page.text, start, self._chars_on_page)
             page = self._convert(self._page_number, chunk.text, [])
         else: # current text + text from next page
@@ -65,6 +75,8 @@ class Page:
 
     @session
     def get_previous_part(self, db):
+        self._load_user_info(db)
+
         page = self._get_previous_part() # use chunk_size one time
 
         self._set_chunk_size(-1) # delete chunk_size, becouse it's stores for one piece of text
@@ -80,7 +92,7 @@ class Page:
         start = self._get_chars_from_start(db)
         chunk_size = self._get_chunk_size(db)
 
-        if self._slicer.check_is_enough_previous(page.text, start, self._chars_on_page): 
+        if self._slicer.check_is_enough_previous(page.text, start, self._chars_on_page) or self._page_number == 1: 
             chunk = self._slicer.previous_slice(page.text, start, self._chars_on_page, chunk_size)
             page = self._convert(self._page_number, chunk.text, [])
             self._update_state(db, chunk.amount, len(chunk.text))
@@ -148,6 +160,10 @@ class Page:
     def _get_bookmark(self, db):
         obj = self._get_user_book(db)
         return obj.bookmark
+
+    def _get_book(self, db):
+        obj = self._db.get_book(db, self._book)
+        return obj
 
     @session
     def _set_is_next(self, db, is_next):

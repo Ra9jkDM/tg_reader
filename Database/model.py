@@ -56,7 +56,7 @@ class Page(Base):
     book_id: Mapped[int] = mapped_column(ForeignKey("book.id", ondelete="CASCADE"), primary_key=True)
     page_number: Mapped[int] = mapped_column(Integer, primary_key=True)
     
-    text: Mapped[String] = mapped_column(String(2000), nullable=True)
+    text: Mapped[String] = mapped_column(String(5000), nullable=True)
     number_of_images: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     book: Mapped["Book"] = relationship("Book", back_populates="pages")
@@ -69,7 +69,7 @@ class UserBook(Base):
 
     bookmark: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     number_of_chars: Mapped[int] = mapped_column(Integer, default=0, nullable=False) # Кол-во символов от начало станицы
-    chunk_size: Mapped[int] = mapped_column(Integer, default=0, nullable=False) # Кол-во символов на данном отрезке
+    chunk_size: Mapped[int] = mapped_column(Integer, default=-1, nullable=False) # Кол-во символов на данном отрезке
     is_next: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False) # Действие пользователя: получал следующую/предыдущую страницу
 
     user: Mapped["User"] = relationship("User", back_populates="books")
@@ -105,6 +105,7 @@ def delete_db(engine=ENGINE):
 
 
 if __name__ == "__main__":
+    delete_db()
     create_db()
-    # delete_db()
 
+# python -m Database.model

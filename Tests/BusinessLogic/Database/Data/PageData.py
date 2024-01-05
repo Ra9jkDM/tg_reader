@@ -2,6 +2,7 @@ from Database.session import session
 from Database.model import *
 from FileStorage.MinIO import MinIO
 from .main import Data
+from io import BytesIO
 
 id = "9000123"
 
@@ -53,7 +54,7 @@ or the returned error value is non-nil, execution stops.'''
         # - Create images
         minio = MinIO()
         for i in range(1, 4):
-            minio.upload_file(folder=f"{book2.id}/2", file_name=f"{i}.txt", file=b'test text')
+            minio.upload_file(folder=f"{book2.id}/2", file_name=f"{i}.txt", file=BytesIO(b'test text'))
 
         # Associated books with users
 

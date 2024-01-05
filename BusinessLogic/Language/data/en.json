@@ -2,5 +2,29 @@
     "unit-test": "Unit test",
     "lang": "Bot language: English",
     "welcome": "Welcome to the telegram bot. It will help you get rid of doomscrolling and read books that you have always put off until later. Here are the commands that will come in handy: ",
-    "heavy_file":"The file could not be loaded.\nCurrent file size limit: 50MB."
+    
+    "chars_on_page_q":"Enter the number of characters to be displayed on the page:",
+    "chars_on_page_error":"Invalid value entered.",
+    "chars_on_page_success":"Value updated. The number of characters on the page is {}.",
+    
+    "not_supported_file_format":"This format is not supported.",
+    "heavy_file":"The file could not be loaded.\nCurrent file size limit: {}.",
+    "upload_book_success":"The book '{}' has been successfully downloaded.",
+
+    "book_list": "List of books:",
+    "book_start":"The beginning of the book.",
+    "book_end":"End of the book.",
+    "set_book_q":"Select a book from the list:",
+    "set_book_success":"Book selected - {}.",
+    "set_book_error": "An incorrect book number value was entered.",
+    "edit_book_name": "Change the title of the book '{}' to",
+    "edit_book_name_success":"The title of the book has been successfully changed.",
+    "delete_book":"Are you sure you want to delete the book '{}'? (Yes/No)",
+    "delete_book_success": "Book '{}' was deleted successfully.",
+    "delete_book_cancel":"Book deletion cancelled.",
+
+    "next":"Next",
+    "previous": "Previous",
+
+    "create_note":"Create note"
 }

@@ -1,8 +1,12 @@
-from Database.model import User, UserBook, Page, Note
+from Database.model import User, UserBook, Page, Note, Book
 
 class DatabaseController:
     def save(self, db, obj):
         db.add(obj)
+        db.commit()
+
+    def delete(self, db, obj):
+        db.delete(obj)
         db.commit()
 
     def commit(self, db):
@@ -31,4 +35,7 @@ class DatabaseController:
     def get_page(self, db, book, page_number):
         return db.query(Page).filter(Page.book_id == book, 
                                     Page.page_number == page_number).first()
+
+    def get_book(self, db, book):
+        return db.query(Book).filter(Book.id == book).first()
     

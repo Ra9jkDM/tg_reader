@@ -26,6 +26,9 @@ class BookUploader:
         self._db.save(db, book)
         self._book_id = book.id
 
+        user = self._db.get_user(db, self._id)
+        user.current_book = self._book_id
+
         user_book = UserBook(user_id = self._id, book_id = self._book_id)
         self._db.save(db, user_book)
 
