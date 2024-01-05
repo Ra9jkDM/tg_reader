@@ -1,7 +1,7 @@
 {
     "unit-test": "Unit test",
     "lang": "Bot language: English",
-    "welcome": "Welcome to the telegram bot. It will help you get rid of doomscrolling and read books that you have always put off until later. Here are the commands that will come in handy: ",
+    "welcome": "Welcome to the telegram bot. It will help you get rid of doomscrolling and read books that you have always put off until later. Here are the commands that will come in handy:\n/info - call this message\n\nBooks:\n/list_books - list of books\n/read - getting the current page\n/set_book - select a book\n/edit_book_name - change the name of the book\n/delete_book - delete a book\n\nPages\n/set_page - go to page\n\nNotes\n/list_notes - list of notes\n/create_note - create a note\n/delete_note - delete notes\n\nSettings\n/set_lang - interface language\n/set_chars_on_page - number of characters on page\nTo download the book, simply send the file",
     
     "chars_on_page_q":"Enter the number of characters to be displayed on the page:",
     "chars_on_page_error":"Invalid value entered.",
@@ -9,6 +9,7 @@
     
     "not_supported_file_format":"This format is not supported.",
     "heavy_file":"The file could not be loaded.\nCurrent file size limit: {}.",
+    "upload_book_notify":"We are starting to download the book..",
     "upload_book_success":"The book '{}' has been successfully downloaded.",
 
     "book_list": "List of books:",
@@ -23,8 +24,15 @@
     "delete_book_success": "Book '{}' was deleted successfully.",
     "delete_book_cancel":"Book deletion cancelled.",
 
+    "set_page":"Go to page(0-{}):",
+    "set_page_error":"Could not find the page with this number.",
     "next":"Next",
     "previous": "Previous",
 
-    "create_note":"Create note"
+    "note":"Create note",
+    "create_note":"Create note:",
+    "list_notes":"Notes:",
+    "create_note_success":"The note was created successfully.",
+    "delete_note":"Select notes to delete:(1, 10, 25)",
+    "delete_note_success": "The selected notes have been successfully deleted."
 }

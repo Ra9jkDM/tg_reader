@@ -25,8 +25,12 @@ bot = TelegramClient('session_name', api_id, api_hash)
 # /delete_book
 
 # page
+# /set_page
 
 # note
+# /list_notes
+# /create_note
+# /delete_note
 
 # preferences
 # /set_lang
@@ -87,6 +91,8 @@ async def upload_book(event, qa):
     if not result:
         await event.respond(answer)
     else:
+        await event.respond(qa.upload_book_notify())
+
         file = BytesIO()
         await event.message.download_media(file)
 
@@ -116,9 +122,11 @@ async def next(event, qa):
 
 
 async def send_page(event, page, qa):
-    message = await event.get_message()
-
-    await bot.edit_message(event.sender_id, event.message_id, message.message)
+    try:
+        message = await event.get_message()
+        await bot.edit_message(event.sender_id, event.message_id, message.message)
+    except:
+        pass
 
     if isinstance(page, PageDTO):
         previous, next = qa.navigate_buttons()
@@ -130,7 +138,7 @@ async def send_page(event, page, qa):
                 buttons=[
                     [
                         Button.inline(previous, b'page_previous'),
-                        Button.inline(str(page.page_number)),
+                        Button.inline(str(page.page_number), b'set_page'),
                         Button.inline(next, b'page_next')
                     ],
                     [Button.inline(note, b'create_note')]
@@ -163,6 +171,51 @@ async def delete_book(event, qa):
         result = await conv.get_response()
         await conv.send_message(qa.delete_book(result.text))
 
+@bot.on(events.NewMessage(pattern='/set_page'))
+@user
+async def set_page_event(event, qa):
+    await _set_page(event, qa)
+
+@bot.on(events.CallbackQuery(data=b'set_page'))
+@user
+async def set_page(event, qa):
+    await _set_page(event, qa)
+
+async def _set_page(event, qa):
+    async with bot.conversation(event.sender_id) as conv:
+        await conv.send_message(qa.set_page_q())
+        result = await conv.get_response()
+        page = qa.set_page(result.text)
+        await send_page(event, page, qa)
+
+@bot.on(events.NewMessage(pattern='/list_notes'))
+@user
+async def list_notes(event, qa):
+    await event.respond(qa.list_notes())
+
+@bot.on(events.NewMessage(pattern='/create_note'))
+@user
+async def create_note_event(event, qa):
+    await _create_note(event, qa)
+
+@bot.on(events.CallbackQuery(data=b'create_note'))
+@user
+async def create_note(event, qa):
+    await _create_note(event, qa)
+
+async def _create_note(event, qa):
+    async with bot.conversation(event.sender_id) as conv:
+        await conv.send_message(qa.create_note_q())
+        result = await conv.get_response()
+        await conv.send_message(qa.create_note(result.text))
+
+@bot.on(events.NewMessage(pattern='/delete_note'))
+@user
+async def delete_note_event(event, qa):
+    async with bot.conversation(event.sender_id) as conv:
+        await conv.send_message(qa.delete_note_q())
+        result = await conv.get_response()
+        await conv.send_message(qa.delete_note(result.text))
 
 # @bot.on(events.NewMessage(pattern='/set_page'))
 # @user

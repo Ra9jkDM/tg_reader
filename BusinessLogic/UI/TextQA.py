@@ -56,6 +56,9 @@ class TextQA: # Questions & Answers
             return False, self._answers.get("heavy_file").format("51MB")
         return True, ""
 
+    def upload_book_notify(self):
+        return self._answers.get("upload_book_notify")
+
     def upload_book(self, book_name, ext, file):
         book_name = book_name[:-len(ext)]
 
@@ -137,14 +140,52 @@ class TextQA: # Questions & Answers
             return self._answers.get("delete_book_cancel")
         
     
-    def set_page(self):
-        pass
+    def set_page_q(self):
+        self._max_page = self._user.book.page_amount()
+        return self._answers.get("set_page").format(self._max_page)
+
+    def set_page(self, page_number):
+        if page_number.isnumeric() and 0 < int(page_number) <= self._max_page:
+            return self._user.page.get(int(page_number))
+        else:
+            return self._answers.get("set_page_error")
+
 
     def note(self):
+        return self._answers.get("note")
+
+    def list_notes(self):
+        result = self._answers.get("list_notes") + "\n"
+        notes = self._user.note.get_all()
+
+        for i in notes:
+            result+= f"{i.page}. {i.text}\n"
+
+        return result
+
+    def create_note_q(self):
         return self._answers.get("create_note")
 
     def create_note(self, note):
-        pass
+        self._user.note.create(note)
+        return self._answers.get("create_note_success")
 
-    def delete_note(self):
-        pass
+    def delete_note_q(self):
+        result = self._answers.get("delete_note") + "\n"
+        result+=self.list_notes()
+        return result
+
+    def delete_note(self, notes):
+        notes = notes.replace(' ', '').split(',')
+        notes = list(map(int, notes))
+
+        try:
+            for i in notes:
+                self._user.note.delete(i)
+        except:
+            pass
+
+        return self._answers.get("delete_note_success")
+
+
+ 

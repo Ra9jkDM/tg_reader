@@ -22,6 +22,11 @@ class Book:
         return self._book_amount
 
     @session
+    def page_amount(self, db):
+        book = self._get_current_book(db)
+        return book.number_of_pages
+
+    @session
     def get_name(self, db):
         book = self._get_current_book(db)
         return book.name

@@ -1,0 +1,46 @@
+RU
+/info - вызов данного сообщения
+
+Книги:
+/list_books - список книг
+/read - получение текущей страницы
+/set_book - выбор книги
+/edit_book_name - изменение названия книги
+/delete_book - удалить книгу
+
+Страницы
+/set_page - перейти на страницу
+
+Заметки
+/list_notes - список заметок
+/create_note - создать заметку
+/delete_note - удалить заметки
+
+Настройки
+/set_lang - язык интерфейса
+/set_chars_on_page - количество символов на странице
+Для загрузки книги просто отправьте файл
+----
+
+EN
+/info - call this message
+
+Books:
+/list_books - list of books
+/read - getting the current page
+/set_book - select a book
+/edit_book_name - change the name of the book
+/delete_book - delete a book
+
+Pages
+/set_page - go to page
+
+Notes
+/list_notes - list of notes
+/create_note - create a note
+/delete_note - delete notes
+
+Settings
+/set_lang - interface language
+/set_chars_on_page - number of characters on page
+To download the book, simply send the file

@@ -19,3 +19,4 @@ Telegram bot for reading books
 
     source .venv/bin/activate
     export $(cat .env)
+    python -m GUI.main

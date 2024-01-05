@@ -37,7 +37,7 @@ class Page:
         page = self._convert(self._page_number, chunk.text, page.images)
 
         self._update_state(db, chunk.amount, len(chunk.text))
-        
+
         return page       
 
     @session
