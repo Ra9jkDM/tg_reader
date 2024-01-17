@@ -131,7 +131,18 @@ class Page:
         page = self._get_page(db)
         images = self._get_images()
 
-        return self._convert(self._page_number, page.text, images)
+
+        text = self._remove_trash_from_text(page.text)
+
+        return self._convert(self._page_number, text, images)
+
+    # Перенести этот метод в другой класс
+    def _remove_trash_from_text(self, text):
+        text = text.replace("-\n", '') if self._remove_dash else text
+        text = text.replace('\n', ' ') if self._remove_enters else text
+
+        return text
+
     
     def _get_page(self, db):
         return self._db.get_page(db, self._book, self._page_number)
@@ -193,6 +204,8 @@ class Page:
 
         self._book = user.current_book
         self._chars_on_page = user.preferences[CHARS_ON_PAGE]
+        self._remove_enters = user.preferences[REMOVE_ENTERS]
+        self._remove_dash = user.preferences[REMOVE_DASH]
 
 
 

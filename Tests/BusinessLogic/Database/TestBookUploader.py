@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock, PropertyMock
+from io import BytesIO
 
 from BusinessLogic.Database.main import Database
 from BusinessLogic.Database.Book import Book
@@ -35,7 +36,7 @@ class TestBookUploader(Base):
 
     def test_upload_book(self):
         self.uploader.create_book()
-        self.uploader.upload_book(b'somebook8302', "pdf")
+        self.uploader.upload_book(BytesIO( b'somebook8302'), "pdf")
 
     @patch.multiple(ImageInterface, __abstractmethods__ = set(),
         get_bytes = MagicMock(return_value=b'1234'), 
@@ -48,14 +49,14 @@ class TestBookUploader(Base):
         self.assertEqual(mock.get_bytes(), b'1234')
 
     @patch.multiple(ImageInterface, __abstractmethods__ = set(),
-        get_bytes = MagicMock(return_value=b'1234'), 
+        get_bytes = MagicMock(return_value=BytesIO(b'1234')), 
         ext=PropertyMock(return_value="png"),
         name=PropertyMock(return_value="test"))
     def test_upload_page_by_page(self):
         self.uploader.create_book()
 
-        pages = [["Lorem pus", [ImageInterface("", ""), ImageInterface("", "")]],
-                 ["Leom sim", [ImageInterface("", "")]]]
+        pages = [["Lorem pus", [ImageInterface("", BytesIO(b"")), ImageInterface("", BytesIO(b""))]],
+                 ["Leom sim", [ImageInterface("", BytesIO(b""))]]]
 
         for text, img in pages:
             self.uploader.save_page(text, img)

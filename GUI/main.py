@@ -131,18 +131,23 @@ async def send_page(event, page, qa):
     if isinstance(page, PageDTO):
         previous, next = qa.navigate_buttons()
         note = qa.note()
-
-        if len(page.images) > 0:
-            await bot.send_file(event.chat_id, page.images)
-        await bot.send_message(event.chat_id, page.text,
-                buttons=[
+        buttons=[
                     [
                         Button.inline(previous, b'page_previous'),
                         Button.inline(str(page.page_number), b'set_page'),
                         Button.inline(next, b'page_next')
                     ],
                     [Button.inline(note, b'create_note')]
-                ])
+                ]
+
+        if len(page.images) > 0:
+            await bot.send_file(event.chat_id, page.images)
+
+        if len(page.text) > 0:
+            await bot.send_message(event.chat_id, page.text, buttons=buttons)
+        else:
+            await bot.send_message(event.chat_id, "_", buttons=buttons)
+
     else:
         await bot.send_message(event.chat_id, page)
 

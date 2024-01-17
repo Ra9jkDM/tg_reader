@@ -23,7 +23,7 @@ or the returned error value is non-nil, execution stops.'''
     @session
     def _create_data(self, db):
         # create User
-        user = User(social_id=id, preferences={CHARS_ON_PAGE: 100}, current_book=2)
+        user = User(social_id=id, preferences={CHARS_ON_PAGE: 100, REMOVE_ENTERS: False, REMOVE_DASH: False}, current_book=2)
 
         self._save(db, [user])
         #create Books

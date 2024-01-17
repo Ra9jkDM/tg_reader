@@ -15,6 +15,8 @@ Telegram bot for reading books
 - PostgreSQL
 - MinIO
 
+> В папке ```/docker-compose``` находятся файлы для развертывания зависимостей с помощью Docker
+
 #### Запуск
 
     source .venv/bin/activate

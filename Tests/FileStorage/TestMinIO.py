@@ -1,4 +1,5 @@
 import unittest
+from io import BytesIO
 
 from FileStorage.MinIO import MinIO
 
@@ -12,7 +13,7 @@ class TestMinIO(unittest.TestCase):
 
     def test_01_upload_file(self):
         try:
-            self.storage.upload_file("txt", "1.txt", b"1234_test")
+            self.storage.upload_file("txt", "1.txt", BytesIO(b"1234_test"))
         except:
             self.fail("Can not upload fule to bucket")
 
@@ -29,7 +30,7 @@ class TestMinIO(unittest.TestCase):
 
     def test_list_folder(self):
         for i in range(1, 5):
-            self.storage.upload_file("3/1", f"{i}.txt", b"1234_test")
+            self.storage.upload_file("3/1", f"{i}.txt", BytesIO(b"1234_test"))
 
         files = self.storage.list_folder("3/1/")
 
@@ -37,7 +38,7 @@ class TestMinIO(unittest.TestCase):
 
     def test_download_files_from_list_folder_output(self):
         for i in range(1, 5):
-            self.storage.upload_file("3/1", f"{i}.txt", b"1234_test")
+            self.storage.upload_file("3/1", f"{i}.txt", BytesIO(b"1234_test"))
 
         files = self.storage.list_folder("3/1/")
 
@@ -50,10 +51,10 @@ class TestMinIO(unittest.TestCase):
 
     def test_delete_not_empty_bucket(self):
         for i in range(1, 4):
-            self.storage.upload_file("txt", f"{i}.txt", b"1234_test")
+            self.storage.upload_file("txt", f"{i}.txt", BytesIO(b"1234_test"))
         
         for i in range(1, 7):
-            self.storage.upload_file("upload", f"{i}.pdf", b"1234_test")
+            self.storage.upload_file("upload", f"{i}.pdf", BytesIO(b"1234_test"))
           
 
     @classmethod

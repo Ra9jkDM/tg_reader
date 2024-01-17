@@ -43,7 +43,7 @@ class TextQA: # Questions & Answers
         return self._answers.get("chars_on_page_q")
 
     def set_chars_on_page(self, num):
-        if num.isnumeric() and int(num) < 1000:
+        if num.isnumeric() and int(num) < 4096:
             self._user.preferences.chars_on_page = int(num)
             return self._answers.get("chars_on_page_success").format(num)
         return self._answers.get("chars_on_page_error")
@@ -189,3 +189,4 @@ class TextQA: # Questions & Answers
 
 
  
+

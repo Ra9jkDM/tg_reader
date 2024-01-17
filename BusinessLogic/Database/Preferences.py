@@ -24,6 +24,14 @@ class Preferences:
     def language(self, lang):
         self._save_setting(LANGUAGE, lang)
 
+    @property
+    def remove_enters(self):
+        return self._get_setting(REMOVE_ENTERS)
+    
+    @remove_enters.setter
+    def remove_enters(self, value: bool):
+        self._save_setting(REMOVE_ENTERS)
+
     @session
     def _get_setting(self, db, name):
         user = self._db.get_user(db, self._id)
