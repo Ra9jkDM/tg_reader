@@ -188,5 +188,8 @@ class TextQA: # Questions & Answers
         return self._answers.get("delete_note_success")
 
 
- 
+ # ToDo: refractor +
+# FixBugs:
+# def get_next_page(self): и def get_previous_page(self): потестить: на первой странице go prev, и на последней странице go next, после этого /set_page and /read
+
 

@@ -30,7 +30,15 @@ class Preferences:
     
     @remove_enters.setter
     def remove_enters(self, value: bool):
-        self._save_setting(REMOVE_ENTERS)
+        self._save_setting(REMOVE_ENTERS, value)
+
+    @property
+    def remove_dash(self):
+        return self._get_setting(REMOVE_ENTERS)
+    
+    @remove_dash.setter
+    def remove_dash(self, value: bool):
+        self._save_setting(REMOVE_DASH, value)
 
     @session
     def _get_setting(self, db, name):

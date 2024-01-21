@@ -18,3 +18,9 @@ class LanguageController:
 
     def get(self, key):
         return self._data[key]
+    
+    def try_to_get(self, key):
+        return self._data.get(key)
+
+    def not_found(self):
+        return self._data["not_found"]
