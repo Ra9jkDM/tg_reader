@@ -1,8 +1,9 @@
 from .BaseCommand import BaseCommand
+from ..Message import Message
 
 class NumberCommand(BaseCommand):
-    def __init__(self, command, function, min_limit, max_limit, tag=None, question=None, format_result=False):
-        super().__init__(command, function, None, is_conversation=True, tag=tag)
+    def __init__(self, command, function, min_limit, max_limit, question=None, format_result=False, *args, **kwargs):
+        super().__init__(command, function, None, is_conversation=True, *args, **kwargs)
         self._min_limit = min_limit
         self._max_limit = max_limit
         self._question = question
@@ -15,7 +16,7 @@ class NumberCommand(BaseCommand):
                 text = text.format(str(self._question(user)))
             else:
                 text +="\n"+self._question(user)
-        return text
+        return Message(text=text)
 
     def action(self, user, number):
         if callable(self._max_limit):
@@ -24,6 +25,8 @@ class NumberCommand(BaseCommand):
             max_limit = self._max_limit
 
         if number.isnumeric() and self._min_limit < int(number) <= max_limit:
-            self._function(user, int(number))
-            return self.lang.get(f"{self._command}_success").format(number)
-        return self.lang.get(f"{self._command}_error")
+            result = self._function(user, int(number))
+            if result:
+                return Message()
+            return Message(text=self.lang.get(f"{self._command}_success").format(number))
+        return Message(text=self.lang.get(f"{self._command}_error"))

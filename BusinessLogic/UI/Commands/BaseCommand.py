@@ -7,15 +7,20 @@ TEST = environ.get("TEST")
 class BaseCommand:
     lang: LanguageController
 
-    def __init__(self, command, function, answers, update_lang=False, display_value=True, is_conversation=False, tag=None):
+    def __init__(self, command, function, answers, update_lang=False, 
+                display_value=True, is_conversation=False, content=None, 
+                command_queue = [],tag=None):
         self._command = command
         self._answers = answers
+        self._command_queue = command_queue
+        self._button_queue = None
 
         if not TEST:
             self._function = function
         else:
             self._function = lambda user, x: x
 
+        self._content = content
         self._is_conversation = is_conversation
         self._update_lang = update_lang
         self._display_value = display_value
@@ -48,6 +53,14 @@ class BaseCommand:
     @property
     def is_conversation(self):
         return self._is_conversation
+
+    @property
+    def command_queue(self):
+        return self._command_queue
+
+    @property
+    def button_queue(self):
+        return self._button_queue
 
     @property
     def tag(self):

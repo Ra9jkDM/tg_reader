@@ -38,7 +38,7 @@
 
     "not_supported_file_format":"Данный формат не поддерживается.",
     "heavy_file":"Невозможно загрузить файл.\nТекущее ограничение на размер файла: {}.",
-    "upload_book_notify":"Начинаем загрузку книги...",
+    "file_strart_downloading":"Начинаем загрузку книги...",
     "upload_book_success":"Книга '{}' успешно загружена.",
 
     "list_books_description": "список книг",
@@ -75,7 +75,12 @@
     "list_notes":"Заметки:\n",
     "note_success":"Заметка создана успешно.",
     "del_notes":"Выберите заметки для удаления:(1, 10, 25)",
-    "del_notes_success": "Выбранные заметки успешно удалены."
+    "del_notes_success": "Выбранные заметки успешно удалены.",
 
+    "read": "{}",
+    "read_previous_btn": "Предыдущая",
+    "read_page_btn":"{}",
+    "read_next_btn": "Следующая",
+    "read_note_btn": "Создать заметку"
 }
 

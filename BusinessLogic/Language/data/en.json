@@ -28,7 +28,7 @@
     
     "not_supported_file_format":"This format is not supported.",
     "heavy_file":"The file could not be loaded.\nCurrent file size limit: {}.",
-    "upload_book_notify":"We are starting to download the book..",
+    "file_strart_downloading":"We are starting to download the book..",
     "upload_book_success":"The book '{}' has been successfully downloaded.",
 
     "remove_dash_description": "removing hyphens when hyphenating words",
@@ -76,5 +76,11 @@
     "list_notes":"Notes:\n",
     "note_success":"The note was created successfully.",
     "del_notes":"Select notes to delete:(1, 10, 25)",
-    "del_note_success": "The selected notes have been successfully deleted."
+    "del_notes_success": "The selected notes have been successfully deleted.",
+
+    "read": "{}",
+    "read_previous_btn": "Previous",
+    "read_page_btn":"{}",
+    "read_next_btn": "Next",
+    "read_note_btn": "Create note"
 }

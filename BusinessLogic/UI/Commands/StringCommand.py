@@ -1,9 +1,10 @@
 from .BaseCommand import BaseCommand
+from ..Message import Message
 
 
 class StringCommand(BaseCommand):
-    def __init__(self, command, function, char_limit, old_value=None, tag=None, format_result=False):
-        super().__init__(command, function, None, is_conversation=True, tag=tag)
+    def __init__(self, command, function, char_limit, old_value="", tag=None, format_result=False, *args, **kwargs):
+        super().__init__(command, function, None, is_conversation=True, tag=tag, *args, **kwargs)
 
         self._char_limit = char_limit
         self._old_value = old_value
@@ -21,10 +22,10 @@ class StringCommand(BaseCommand):
             text = text.format(value)
         else:
             text = text + "\n" + value
-        return text
+        return Message(text=text)
 
     def action(self, user, text):
         if len(text) <= self._char_limit:
             self._function(user, text)
-            return self.lang.get(f"{self._command}_success")
-        return self.lang.get(f"{self._command}_error")
+            return Message(text=self.lang.get(f"{self._command}_success"))
+        return Message(text=self.lang.get(f"{self._command}_error"))

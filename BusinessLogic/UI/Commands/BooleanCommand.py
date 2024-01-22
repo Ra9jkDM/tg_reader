@@ -1,17 +1,17 @@
 from .ButtonsCommand import ButtonsCommand
-
+from .Button import Button
 
 class BooleanCommand(ButtonsCommand):
-    def __init__(self, command, function, tag=None):
-        super().__init__(command, function, ['yes', 'no'], display_value=False, is_conversation=True, tag=tag)
+    def __init__(self, command, function, *args, **kwargs):
+        super().__init__(command, function, ['yes', 'no'], display_value=False, is_conversation=True, *args, **kwargs)
         self._mock_function()
 
-    def get_buttons(self):
+    def get_buttons(self, user):
         buttons = []
 
         for i in self._answers:
             tag = f"{self._command}_{i}_{self._button_postfix}"
-            tmp = [self.lang.get(i), tag]
+            tmp = {"name": self.lang.get(i), "id": tag}
             buttons.append(tmp)
 
         return buttons

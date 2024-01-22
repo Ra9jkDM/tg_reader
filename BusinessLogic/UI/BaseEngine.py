@@ -1,8 +1,10 @@
 from BusinessLogic.Language.LanguageController import LanguageController
 from .Commands.BaseCommand import BaseCommand
 from .Commands.ButtonsCommand import ButtonsCommand
+from .Commands.FileCommand import FileCommand
+from .Message import Message
 
-from .Actions import get_language
+from .Actions.Base import get_language
 
 class BaseEngine:
     _active_command: BaseCommand
@@ -19,11 +21,11 @@ class BaseEngine:
                 i.lang = self._lang
                 self._active_command = i
 
-                text = i.question(user, command)
-                buttons, is_conversation = self._get_buttons_and_dialogue_type(i)
-                return {"text": text, "buttons": buttons, "is_conversation": is_conversation}
+                result = i.question(user, command)
+                result.buttons, result.is_conversation = self._get_buttons_and_dialogue_type(i, user)
+                return result
 
-        return {"text": self._lang.not_found(), "buttons": None, "is_conversation": False}
+        return Message(text=self._lang.not_found())
 
     def button_handlers(self, user, command: str):
         self._set_language(user)
@@ -31,9 +33,12 @@ class BaseEngine:
         for i in self._commands:
             if i.button_check(command):
                 i.lang = self._lang
-                return i.answer(user, command)
 
-        return self._lang.not_found()
+                result = i.answer(user, command)
+                self._button_queue = i.button_queue
+                return result
+
+        return Message(text=self._lang.not_found())
 
     def action(self, user, value: str) -> str:
         self._set_language(user)
@@ -43,11 +48,20 @@ class BaseEngine:
         
         return answer
 
-    def _get_buttons_and_dialogue_type(self, command: BaseCommand):
+    def upload_book(self, user):
+        return FileCommand(user)
+
+    def get_command_queue(self):
+        return self._active_command.command_queue
+    
+    def get_button_queue(self):
+        return self._button_queue
+
+    def _get_buttons_and_dialogue_type(self, command: BaseCommand, user):
         conversation = False
 
         if issubclass(type(command), ButtonsCommand):
-            buttons = command.get_buttons()
+            buttons = command.get_buttons(user)
         else:
             buttons = None
             conversation = command.is_conversation
