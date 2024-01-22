@@ -19,6 +19,8 @@ Telegram bot for reading books
 
 #### Запуск
 
+    cp .env_template .env # заполнить своими значениями
+
     source .venv/bin/activate
     export $(cat .env)
-    python -m GUI.main
+    python -m GUI.TelegramEngine

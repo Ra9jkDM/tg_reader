@@ -161,6 +161,7 @@ class Page:
 
     @session
     def get_bookmark(self, db):
+        self._load_user_info(db)
         return self._get_bookmark(db)
 
     def _set_bookmark(self, db):

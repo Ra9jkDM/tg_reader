@@ -35,7 +35,7 @@ def get_previous_page(user_id):
 
 def get_page_number(user_id):
     user = _get_user(user_id)
-    number, _, _ = user.page.get_current()
+    number = user.page.get_bookmark()
     return number
 
 
