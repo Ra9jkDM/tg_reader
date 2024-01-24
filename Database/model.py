@@ -56,7 +56,7 @@ class Page(Base):
     book_id: Mapped[int] = mapped_column(ForeignKey("book.id", ondelete="CASCADE"), primary_key=True)
     page_number: Mapped[int] = mapped_column(Integer, primary_key=True)
     
-    text: Mapped[String] = mapped_column(String(5000), nullable=True)
+    text: Mapped[String] = mapped_column(String(15000), nullable=True)
     number_of_images: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     book: Mapped["Book"] = relationship("Book", back_populates="pages")

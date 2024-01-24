@@ -21,16 +21,22 @@ def _book_list_text(books):
 def read(user_id):
     user = _get_user(user_id)
     _, text, images = user.page.get_current()
+    if len(text) == 0:
+        text = "_"
     return text, images
 
 def get_next_page(user_id):
     user = _get_user(user_id)
-    _, text, images = user.page.get_next_part() # ToDo
+    _, text, images = user.page.get_next_part()
+    if len(text) == 0:
+        text = "_"
     return text, images
 
 def get_previous_page(user_id):
     user = _get_user(user_id)
     _, text, images = user.page.get_previous_part()
+    if len(text) == 0:
+        text = "_"
     return text, images
 
 def get_page_number(user_id):

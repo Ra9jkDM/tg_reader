@@ -22,5 +22,11 @@ Telegram bot for reading books
     cp .env_template .env # заполнить своими значениями
 
     source .venv/bin/activate
+
+    pip install -r requirements.txt
+    pip install PyMuPDF==1.23.6
+
     export $(cat .env)
+    python -m Database.model # Create db 
+
     python -m GUI.TelegramEngine
